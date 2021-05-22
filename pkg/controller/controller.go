@@ -32,6 +32,7 @@ import (
 	"github.com/sirupsen/logrus"
 
 	apps_v1 "k8s.io/api/apps/v1"
+	autoscaling_v1 "k8s.io/api/autoscaling/v1"
 	batch_v1 "k8s.io/api/batch/v1"
 	api_v1 "k8s.io/api/core/v1"
 	ext_v1beta1 "k8s.io/api/extensions/v1beta1"
@@ -49,6 +50,7 @@ import (
 
 const maxRetries = 5
 const V1 = "v1"
+const AUTOSCALING_V1 = "autoscaling/v1"
 const APPS_V1 = "apps/v1"
 const BATCH_V1 = "batch/v1"
 const RBAC_V1 = "rbac.authorization.k8s.io/v1"
@@ -134,6 +136,29 @@ func Start(conf *config.Config, eventHandler handlers.Handler) {
 		defer close(stopCh)
 
 		go c.Run(stopCh)
+	}
+
+	if conf.Resource.HPA {
+		informer := cache.NewSharedIndexInformer(
+			&cache.ListWatch{
+				ListFunc: func(options meta_v1.ListOptions) (runtime.Object, error) {
+					return kubeClient.AutoscalingV1().HorizontalPodAutoscalers(conf.Namespace).List(options)
+				},
+				WatchFunc: func(options meta_v1.ListOptions) (watch.Interface, error) {
+					return kubeClient.AutoscalingV1().HorizontalPodAutoscalers(conf.Namespace).Watch(options)
+				},
+			},
+			&autoscaling_v1.HorizontalPodAutoscaler{},
+			0, //Skip resync
+			cache.Indexers{},
+		)
+
+		c := newResourceController(kubeClient, eventHandler, informer, objName(autoscaling_v1.HorizontalPodAutoscaler{}), AUTOSCALING_V1)
+		stopCh := make(chan struct{})
+		defer close(stopCh)
+
+		go c.Run(stopCh)
+
 	}
 
 	if conf.Resource.DaemonSet {

@@ -71,6 +71,7 @@ resource:
   sa: false
   pv: false
   ns: false
+  hpa: false
   secret: false
   configmap: false
   ing: false
