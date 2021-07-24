@@ -18,6 +18,7 @@ package cmd
 
 import (
 	"fmt"
+	"net/http"
 	"os"
 
 	"github.com/bitnami-labs/kubewatch/config"
@@ -25,6 +26,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	_ "net/http/pprof"
 )
 
 var cfgFile string
@@ -76,6 +78,16 @@ func init() {
 		Hidden: true,
 	})
 	//RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.kubewatch.yaml)")
+	if os.Getenv("ENABLE_PPROF") == "True" {
+		go func() {
+			pprofAddr := "localhost:6060"
+			logrus.Infof("Initializing pprof %s", pprofAddr)
+			err := http.ListenAndServe(pprofAddr, nil)
+			if err != nil {
+				logrus.Errorf("Failed to initialize pprof %s", err)
+			}
+		}()
+	}
 }
 
 // initConfig reads in config file and ENV variables if set.
