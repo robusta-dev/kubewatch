@@ -141,6 +141,10 @@ func configureResource(operation string, cmd *cobra.Command, conf *config.Config
 			"sa",
 			&conf.Resource.ServiceAccount,
 		},
+		{
+			"statefulset",
+			&conf.Resource.StatefulSet,
+		},
 	}
 
 	for _, flag := range flags {

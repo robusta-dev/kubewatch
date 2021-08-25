@@ -53,6 +53,7 @@ type Resource struct {
 	ReplicationController bool `json:"rc"`
 	ReplicaSet            bool `json:"rs"`
 	DaemonSet             bool `json:"ds"`
+	StatefulSet           bool `json:"statefulset"`
 	Services              bool `json:"svc"`
 	Pod                   bool `json:"po"`
 	Job                   bool `json:"job"`
