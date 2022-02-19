@@ -1,3 +1,5 @@
+**This is a Robusta fork of Bitnami's [Kubewatch](https://github.com/bitnami-labs/kubewatch/) project**. The original repository is no longer maintained. Ideally we'd like to get our changes upstream, but for now we'll be maintaining this repository as a blessed Robusta fork of Kubewatch. Please feel free to open PRs for this repo and we'll review them. If anyone from Bitnami is reading this, please reach out! We'd love to get this all merged upstream.
+
 <p align="center">
   <img src="./docs/kubewatch-logo.jpeg">
 </p>
