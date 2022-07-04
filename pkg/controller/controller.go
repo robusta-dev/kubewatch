@@ -36,7 +36,7 @@ import (
 	batch_v1 "k8s.io/api/batch/v1"
 	api_v1 "k8s.io/api/core/v1"
 	ext_v1beta1 "k8s.io/api/extensions/v1beta1"
-	rbac_v1beta1 "k8s.io/api/rbac/v1beta1"
+	rbac_v1 "k8s.io/api/rbac/v1"
 	meta_v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
@@ -385,18 +385,18 @@ func Start(conf *config.Config, eventHandler handlers.Handler) {
 		informer := cache.NewSharedIndexInformer(
 			&cache.ListWatch{
 				ListFunc: func(options meta_v1.ListOptions) (runtime.Object, error) {
-					return kubeClient.RbacV1beta1().ClusterRoles().List(options)
+					return kubeClient.RbacV1().ClusterRoles().List(options)
 				},
 				WatchFunc: func(options meta_v1.ListOptions) (watch.Interface, error) {
-					return kubeClient.RbacV1beta1().ClusterRoles().Watch(options)
+					return kubeClient.RbacV1().ClusterRoles().Watch(options)
 				},
 			},
-			&rbac_v1beta1.ClusterRole{},
+			&rbac_v1.ClusterRole{},
 			0, //Skip resync
 			cache.Indexers{},
 		)
 
-		c := newResourceController(kubeClient, eventHandler, informer, objName(rbac_v1beta1.ClusterRole{}), RBAC_V1)
+		c := newResourceController(kubeClient, eventHandler, informer, objName(rbac_v1.ClusterRole{}), RBAC_V1)
 		stopCh := make(chan struct{})
 		defer close(stopCh)
 
