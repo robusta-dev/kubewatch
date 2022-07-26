@@ -17,6 +17,8 @@ limitations under the License.
 package cmd
 
 import (
+	"strconv"
+
 	"github.com/bitnami-labs/kubewatch/config"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
@@ -42,6 +44,30 @@ var webhookConfigCmd = &cobra.Command{
 			logrus.Fatal(err)
 		}
 
+		cert, err := cmd.Flags().GetString("cert")
+		if err == nil {
+			if len(cert) > 0 {
+				conf.Handler.Webhook.Cert = cert
+			}
+		} else {
+			logrus.Fatal(err)
+		}
+
+		tlsSkip, err := cmd.Flags().GetString("tlsskip")
+		if err == nil {
+			if len(tlsSkip) > 0 {
+				skip, err := strconv.ParseBool(tlsSkip)
+				if err != nil {
+					logrus.Fatal(err)
+				}
+				conf.Handler.Webhook.TlsSkip = skip
+			} else {
+				conf.Handler.Webhook.TlsSkip = false
+			}
+		} else {
+			logrus.Fatal(err)
+		}
+
 		if err = conf.Write(); err != nil {
 			logrus.Fatal(err)
 		}
@@ -50,4 +76,6 @@ var webhookConfigCmd = &cobra.Command{
 
 func init() {
 	webhookConfigCmd.Flags().StringP("url", "u", "", "Specify Webhook url")
+	webhookConfigCmd.Flags().StringP("cert", "", "", "Specify Webhook cert path")
+	webhookConfigCmd.Flags().StringP("tlsskip", "", "", "Specify whether Webhook skips tls verify; TRUE or FALSE")
 }

@@ -119,7 +119,9 @@ type Flock struct {
 // Webhook contains webhook configuration
 type Webhook struct {
 	// Webhook URL.
-	Url string `json:"url"`
+	Url     string `json:"url"`
+	Cert    string `json:"cert"`
+	TlsSkip bool   `json:"tlsskip"`
 }
 
 // CloudEvent contains CloudEvent configuration
