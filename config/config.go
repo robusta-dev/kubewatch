@@ -59,6 +59,7 @@ type Resource struct {
 	Job                   bool `json:"job"`
 	Node                  bool `json:"node"`
 	ClusterRole           bool `json:"clusterrole"`
+	ClusterRoleBinding    bool `json:"clusterrolebinding`
 	ServiceAccount        bool `json:"sa"`
 	PersistentVolume      bool `json:"pv"`
 	Namespace             bool `json:"ns"`
@@ -262,6 +263,9 @@ func (c *Config) CheckMissingResourceEnvvars() {
 	}
 	if !c.Resource.ClusterRole && os.Getenv("KW_CLUSTER_ROLE") == "true" {
 		c.Resource.ClusterRole = true
+	}
+	if !c.Resource.ClusterRole && os.Getenv("KW_CLUSTER_ROLE_BINDING") == "true" {
+		c.Resource.ClusterRoleBinding = true
 	}
 	if (c.Handler.Slack.Channel == "") && (os.Getenv("SLACK_CHANNEL") != "") {
 		c.Handler.Slack.Channel = os.Getenv("SLACK_CHANNEL")

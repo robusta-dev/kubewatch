@@ -138,6 +138,10 @@ func configureResource(operation string, cmd *cobra.Command, conf *config.Config
 			&conf.Resource.ClusterRole,
 		},
 		{
+			"clusterrolebinding",
+			&conf.Resource.ClusterRoleBinding,
+		},
+		{
 			"sa",
 			&conf.Resource.ServiceAccount,
 		},
@@ -191,5 +195,6 @@ func init() {
 	resourceConfigCmd.PersistentFlags().Bool("ing", false, "watch for ingresses")
 	resourceConfigCmd.PersistentFlags().Bool("node", false, "watch for Nodes")
 	resourceConfigCmd.PersistentFlags().Bool("clusterrole", false, "watch for cluster roles")
+	resourceConfigCmd.PersistentFlags().Bool("clusterrolebinding", false, "watch for cluster roles binding")
 	resourceConfigCmd.PersistentFlags().Bool("sa", false, "watch for service accounts")
 }

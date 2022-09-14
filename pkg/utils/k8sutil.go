@@ -83,6 +83,8 @@ func GetObjectMetaData(obj interface{}) (objectMeta meta_v1.ObjectMeta) {
 		objectMeta = object.ObjectMeta
 	case *rbac_v1beta1.ClusterRole:
 		objectMeta = object.ObjectMeta
+	case *rbac_v1beta1.ClusterRoleBinding:
+		objectMeta = object.ObjectMeta
 	case *api_v1.ServiceAccount:
 		objectMeta = object.ObjectMeta
 	case *api_v1.Event:
