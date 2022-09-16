@@ -17,7 +17,10 @@ limitations under the License.
 package webhook
 
 import (
+	"crypto/tls"
+	"crypto/x509"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 
@@ -33,10 +36,11 @@ import (
 var webhookErrMsg = `
 %s
 
-You need to set Webhook url
-using "--url/-u" or using environment variables:
+You need to set Webhook url, and Webhook cert if you use self signed certificates,
+using "--url/-u" and "--cert", or using environment variables:
 
 export KW_WEBHOOK_URL=webhook_url
+export KW_WEBHOOK_CERT=/path/of/cert
 
 Command line flags will override environment variables
 
@@ -66,12 +70,35 @@ type EventMeta struct {
 // Init prepares Webhook configuration
 func (m *Webhook) Init(c *config.Config) error {
 	url := c.Handler.Webhook.Url
+	cert := c.Handler.Webhook.Cert
+	tlsSkip := c.Handler.Webhook.TlsSkip
 
 	if url == "" {
 		url = os.Getenv("KW_WEBHOOK_URL")
 	}
+	if cert == "" {
+		cert = os.Getenv("KW_WEBHOOK_CERT")
+	}
 
 	m.Url = url
+
+	if tlsSkip {
+		http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
+	} else {
+		if cert == "" {
+			log.Printf("No webhook cert is given")
+		} else {
+			caCert, err := ioutil.ReadFile(cert)
+			if err != nil {
+				log.Printf("%s\n", err)
+				return err
+			}
+			caCertPool := x509.NewCertPool()
+			caCertPool.AppendCertsFromPEM(caCert)
+			http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{RootCAs: caCertPool}
+		}
+
+	}
 
 	return checkMissingWebhookVars(m)
 }

@@ -26,6 +26,10 @@ handler:
   webhook:
     # Webhook URL.
     url: ""
+    # Whether skip tls or not.
+    tlsskip: ""
+    # Path of webhook cert. Default value is false.
+    cert: ""
   cloudevent:
     # CloudEvent webhook URL.
     url: ""

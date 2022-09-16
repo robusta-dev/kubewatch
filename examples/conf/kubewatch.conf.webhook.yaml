@@ -13,7 +13,9 @@ handler:
   flock:
     url: ""
   webhook:
-    url: "http://localhost:8080"
+    url: "https://localhost:443"
+    tlsskip: false
+    cert: "/root/tls/ca.crt"
 resource:
   deployment: false
   replicationcontroller: false
