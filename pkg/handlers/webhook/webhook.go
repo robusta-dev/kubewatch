@@ -36,10 +36,11 @@ import (
 var webhookErrMsg = `
 %s
 
-You need to set Webhook url
-using "--url/-u" or using environment variables:
+You need to set Webhook url, and Webhook cert if you use self signed certificates,
+using "--url/-u" and "--cert", or using environment variables:
 
 export KW_WEBHOOK_URL=webhook_url
+export KW_WEBHOOK_CERT=/path/of/cert
 
 Command line flags will override environment variables
 
