@@ -72,6 +72,7 @@ resource:
   job: false
   node: false
   clusterrole: false
+  clusterrolebinding: false
   sa: false
   pv: false
   ns: false

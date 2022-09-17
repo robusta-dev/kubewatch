@@ -403,6 +403,28 @@ func Start(conf *config.Config, eventHandler handlers.Handler) {
 		go c.Run(stopCh)
 	}
 
+	if conf.Resource.ClusterRoleBinding {
+		informer := cache.NewSharedIndexInformer(
+			&cache.ListWatch{
+				ListFunc: func(options meta_v1.ListOptions) (runtime.Object, error) {
+					return kubeClient.RbacV1().ClusterRoleBindings().List(options)
+				},
+				WatchFunc: func(options meta_v1.ListOptions) (watch.Interface, error) {
+					return kubeClient.RbacV1().ClusterRoleBindings().Watch(options)
+				},
+			},
+			&rbac_v1.ClusterRoleBinding{},
+			0, //Skip resync
+			cache.Indexers{},
+		)
+
+		c := newResourceController(kubeClient, eventHandler, informer, objName(rbac_v1.ClusterRoleBinding{}), RBAC_V1)
+		stopCh := make(chan struct{})
+		defer close(stopCh)
+
+		go c.Run(stopCh)
+	}
+
 	if conf.Resource.PersistentVolume {
 		informer := cache.NewSharedIndexInformer(
 			&cache.ListWatch{
