@@ -61,7 +61,7 @@ Use "kubewatch [command] --help" for more information about a command.
 When you have helm installed in your cluster, use the following setup:
 
 ```console
-helm install --name kubewatch bitnami/kubewatch --set='rbac.create=true,slack.channel=#YOUR_CHANNEL,slack.token=xoxb-YOUR_TOKEN,resourcesToWatch.pod=true,resourcesToWatch.daemonset=true'
+helm install kubewatch bitnami/kubewatch --set='rbac.create=true,slack.channel=#YOUR_CHANNEL,slack.token=xoxb-YOUR_TOKEN,resourcesToWatch.pod=true,resourcesToWatch.daemonset=true'
 ```
 
 You may also provide a values file instead:
