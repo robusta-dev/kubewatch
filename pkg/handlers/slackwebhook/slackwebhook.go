@@ -124,12 +124,6 @@ func (m *SlackWebhook) Handle(e event.Event) {
 }
 
 func checkMissingWebhookVars(s *SlackWebhook) error {
-	if s.Channel == "" {
-		return fmt.Errorf(webhookErrMsg, "Missing Slack Webhook Channel")
-	}
-	if s.Username == "" {
-		return fmt.Errorf(webhookErrMsg, "Missing Slack Webhook Username")
-	}
 	if s.Slackwebhookurl == "" {
 		return fmt.Errorf(webhookErrMsg, "Missing Slack Webhook url")
 	}
