@@ -100,9 +100,9 @@ $ helm upgrade --install kubewatch robusta/kubewatch --values=values-file.yml
 
 #### Using kubectl:
 
-In order to run kubewatch in a Kubernetes cluster quickly, the easiest way is for you to create a [ConfigMap](https://github.com/bitnami-labs/kubewatch/blob/master/kubewatch-configmap.yaml) to hold kubewatch configuration.
+In order to run kubewatch in a Kubernetes cluster quickly, the easiest way is for you to create a [ConfigMap](https://github.com/robusta-dev/kubewatch/blob/master/kubewatch-configmap.yaml) to hold kubewatch configuration.
 
-An example is provided at [`kubewatch-configmap.yaml`](https://github.com/bitnami-labs/kubewatch/blob/master/kubewatch-configmap.yaml), do not forget to update your own slack channel and token parameters. Alternatively, you could use secrets.
+An example is provided at [`kubewatch-configmap.yaml`](https://github.com/robusta-dev/kubewatch/blob/master/kubewatch-configmap.yaml), do not forget to update your own slack channel and token parameters. Alternatively, you could use secrets.
 
 Create k8s configmap:
 
@@ -110,7 +110,7 @@ Create k8s configmap:
 $ kubectl create -f kubewatch-configmap.yaml
 ```
 
-Create the [Pod](https://github.com/bitnami-labs/kubewatch/blob/master/kubewatch.yaml) directly, or create your own deployment:
+Create the [Pod](https://github.com/robusta-dev/kubewatch/blob/master/kubewatch.yaml) directly, or create your own deployment:
 
 ```console
 $ kubectl create -f kubewatch.yaml
@@ -175,7 +175,7 @@ $ kubectl create -f kubewatch.yaml
 
 ```console
 # Download and install kubewatch
-$ go get -u github.com/bitnami-labs/kubewatch
+$ go get -u github.com/robusta-dev/kubewatch
 
 # Configure the notification channel
 $ kubewatch config add slack --channel <slack_channel> --token <slack_token>
@@ -201,13 +201,13 @@ INFO[0000] Kubewatch controller synced and ready         pkg=kubewatch-pod
 To Run Kubewatch Container interactively, place the config file in `$HOME/.kubewatch.yaml` location and use the following command.
 
 ```
-docker run --rm -it --network host -v $HOME/.kubewatch.yaml:/root/.kubewatch.yaml -v $HOME/.kube/config:/opt/bitnami/kubewatch/.kube/config --name <container-name> bitnami/kubewatch
+docker run --rm -it --network host -v $HOME/.kubewatch.yaml:/root/.kubewatch.yaml -v $HOME/.kube/config:/opt/bitnami/kubewatch/.kube/config --name <container-name> us-central1-docker.pkg.dev/genuine-flight-317411/devel/kubewatch
 ```
 
 Example:
 
 ```
-$ docker run --rm -it --network host -v $HOME/.kubewatch.yaml:/root/.kubewatch.yaml -v $HOME/.kube/config:/opt/bitnami/kubewatch/.kube/config --name kubewatch-app bitnami/kubewatch
+$ docker run --rm -it --network host -v $HOME/.kubewatch.yaml:/root/.kubewatch.yaml -v $HOME/.kube/config:/opt/bitnami/kubewatch/.kube/config --name kubewatch-app us-central1-docker.pkg.dev/genuine-flight-317411/devel/kubewatch
 
 ==> Writing config file...
 INFO[0000] Starting kubewatch controller                 pkg=kubewatch-service
@@ -224,7 +224,7 @@ INFO[0000] Processing add to namespace: default          pkg=kubewatch-namespace
 To Demonise Kubewatch container use
 
 ```
-$ docker run --rm -d --network host -v $HOME/.kubewatch.yaml:/root/.kubewatch.yaml -v $HOME/.kube/config:/opt/bitnami/kubewatch/.kube/config --name kubewatch-app bitnami/kubewatch
+$ docker run --rm -d --network host -v $HOME/.kubewatch.yaml:/root/.kubewatch.yaml -v $HOME/.kube/config:/opt/bitnami/kubewatch/.kube/config --name kubewatch-app us-central1-docker.pkg.dev/genuine-flight-317411/devel/kubewatch
 ```
 
 # Configure
