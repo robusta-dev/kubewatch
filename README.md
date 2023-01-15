@@ -2,7 +2,7 @@
 
 **kubewatch** is a Kubernetes watcher that publishes notification to available collaboration hubs/notification channels. Run it in your k8s cluster, and you will get event notifications through webhooks.
 
-Robusta uses Kubewatch under the hood to implement [Kubernetes automations](https://home.robusta.dev/features/automation-engine) and [multi-cluster change tracking](https://home.robusta.dev/features/cluster-timeline), so we plan to continue improving Kubewatch.
+Robusta uses Kubewatch under the hood to implement [Kubernetes automations](https://home.robusta.dev/features/automation-engine) and [multi-cluster change tracking](https://home.robusta.dev/features/cluster-timeline). We are invested Kubewatch and will continue to improve it.
 
 <p align="center">
   <img src="./docs/kubewatch-logo.jpeg">
