@@ -288,6 +288,9 @@ func (c *Config) CheckMissingResourceEnvvars() {
 	if (c.Handler.Slack.Token == "") && (os.Getenv("SLACK_TOKEN") != "") {
 		c.Handler.Slack.Token = os.Getenv("SLACK_TOKEN")
 	}
+	if (c.Handler.SlackWebhook.Slackwebhookurl == "") && (os.Getenv("KW_SLACK_WEBHOOK_URL") != "") {
+		c.Handler.SlackWebhook.Slackwebhookurl = os.Getenv("KW_SLACK_WEBHOOK_URL")
+	}
 }
 
 func (c *Config) Write() error {
