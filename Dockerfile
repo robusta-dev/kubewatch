@@ -17,4 +17,6 @@ RUN install_packages ca-certificates
 
 COPY --from=builder /kubewatch /bin/kubewatch
 
+ENV KW_CONFIG=/opt/bitnami/kubewatch
+
 ENTRYPOINT ["/bin/kubewatch"]
