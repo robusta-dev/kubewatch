@@ -526,6 +526,7 @@ func newResourceController(client kubernetes.Interface, eventHandler handlers.Ha
 	informer.AddEventHandler(cache.ResourceEventHandlerFuncs{
 		AddFunc: func(obj interface{}) {
 			var ok bool
+			newEvent.namespace = ""
 			newEvent.key, err = cache.MetaNamespaceKeyFunc(obj)
 			newEvent.eventType = "create"
 			newEvent.resourceType = resourceType
@@ -541,6 +542,7 @@ func newResourceController(client kubernetes.Interface, eventHandler handlers.Ha
 		},
 		UpdateFunc: func(old, new interface{}) {
 			var ok bool
+			newEvent.namespace = ""
 			newEvent.key, err = cache.MetaNamespaceKeyFunc(old)
 			newEvent.eventType = "update"
 			newEvent.resourceType = resourceType
