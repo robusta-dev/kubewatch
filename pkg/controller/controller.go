@@ -526,7 +526,7 @@ func newResourceController(client kubernetes.Interface, eventHandler handlers.Ha
 	informer.AddEventHandler(cache.ResourceEventHandlerFuncs{
 		AddFunc: func(obj interface{}) {
 			var ok bool
-			newEvent.namespace = ""
+			newEvent.namespace = "" // namespace retrived in processItem incase namespace value is empty
 			newEvent.key, err = cache.MetaNamespaceKeyFunc(obj)
 			newEvent.eventType = "create"
 			newEvent.resourceType = resourceType
@@ -542,7 +542,7 @@ func newResourceController(client kubernetes.Interface, eventHandler handlers.Ha
 		},
 		UpdateFunc: func(old, new interface{}) {
 			var ok bool
-			newEvent.namespace = ""
+			newEvent.namespace = "" // namespace retrived in processItem incase namespace value is empty
 			newEvent.key, err = cache.MetaNamespaceKeyFunc(old)
 			newEvent.eventType = "update"
 			newEvent.resourceType = resourceType
@@ -562,11 +562,11 @@ func newResourceController(client kubernetes.Interface, eventHandler handlers.Ha
 		},
 		DeleteFunc: func(obj interface{}) {
 			var ok bool
+			newEvent.namespace = "" // namespace retrived in processItem incase namespace value is empty
 			newEvent.key, err = cache.DeletionHandlingMetaNamespaceKeyFunc(obj)
 			newEvent.eventType = "delete"
 			newEvent.resourceType = resourceType
 			newEvent.apiVersion = apiVersion
-			newEvent.namespace = utils.GetObjectMetaData(obj).Namespace
 			newEvent.obj, ok = obj.(runtime.Object)
 			if !ok {
 				logrus.WithField("pkg", "kubewatch-"+resourceType).Errorf("cannot convert to runtime.Object for delete on %v", obj)
@@ -671,6 +671,8 @@ func (c *Controller) processItem(newEvent Event) error {
 		substring := strings.Split(newEvent.key, "/")
 		newEvent.namespace = substring[0]
 		newEvent.key = substring[1]
+	} else {
+		newEvent.namespace = objectMeta.Namespace
 	}
 
 	// process events based on its type
@@ -692,7 +694,7 @@ func (c *Controller) processItem(newEvent Event) error {
 				status = "Normal"
 			}
 			kbEvent := event.Event{
-				Name:       objectMeta.Name,
+				Name:       newEvent.key,
 				Namespace:  newEvent.namespace,
 				Kind:       newEvent.resourceType,
 				ApiVersion: newEvent.apiVersion,
