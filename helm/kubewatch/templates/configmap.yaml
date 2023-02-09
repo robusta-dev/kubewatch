@@ -34,5 +34,8 @@ data:
       {{- if .Values.msteams.enabled }}
       msteams: {{- toYaml .Values.msteams | nindent 8 }}
       {{- end }}
+      {{- with .Values.extraHandlers }}
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
     resource: {{- toYaml .Values.resourcesToWatch | nindent 6 }}
     namespace: {{ .Values.namespaceToWatch | quote }}
