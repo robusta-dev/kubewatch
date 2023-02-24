@@ -45,6 +45,14 @@ rules:
       - list
       - watch
   - apiGroups:
+      - autoscaling 
+    resources:
+      - horizontalpodautoscalers
+    verbs:
+      - list
+      - watch
+      - get
+  - apiGroups:
       - extensions
     resources:
       - daemonsets
