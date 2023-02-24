@@ -160,6 +160,10 @@ smtp:
   ## @param smtp.requireTLS Force STARTTLS. Set to `true` or `false`
   ##
   requireTLS: ""
+
+## @param extraHandlers Manual handlers declaration
+extraHandlers: {}
+
 ## @param namespaceToWatch Namespace to watch, leave it empty for watching all
 ##
 namespaceToWatch: ""
