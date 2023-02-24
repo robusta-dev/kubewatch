@@ -90,6 +90,18 @@ slack:
   ## Create using: https://my.slack.com/services/new/bot and invite the bot to your channel using: /join @botname
   ##
   token: "XXXX"
+## @param slackwebhook.enabled Enable SlackWebhook notifications
+## @param slackwebhook.channel Slack channel to notify
+## @param slackwebhook.username Slack username
+## @param slackwebhook.emoji Slack emoji
+## @param slackwebhook.slackwebhookurl Slack Webhook Url
+##
+slackwebhook:
+  enabled: false
+  channel: "XXXX"
+  username: ""
+  emoji: ""
+  slackwebhookurl: "XXXX"
 ## @param hipchat.enabled Enable HipChat notifications
 ## @param hipchat.room HipChat room to notify
 ## @param hipchat.token HipChat token

@@ -16,6 +16,9 @@ data:
       {{- if .Values.slack.enabled }}
       slack: {{- toYaml .Values.slack | nindent 8 }}
       {{- end }}
+      {{- if .Values.slackwebhook.enabled }}
+      slackwebhook: {{- toYaml .Values.slackwebhook | nindent 8 }}
+      {{- end }}
       {{- if .Values.hipchat.enabled }}
       hipchat: {{- toYaml .Values.hipchat | nindent 8 }}
       {{- end }}
