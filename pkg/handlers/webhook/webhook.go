@@ -20,8 +20,8 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"fmt"
+	"github.com/sirupsen/logrus"
 	"io/ioutil"
-	"log"
 	"os"
 
 	"bytes"
@@ -86,11 +86,11 @@ func (m *Webhook) Init(c *config.Config) error {
 		http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	} else {
 		if cert == "" {
-			log.Printf("No webhook cert is given")
+			logrus.Printf("No webhook cert is given")
 		} else {
 			caCert, err := ioutil.ReadFile(cert)
 			if err != nil {
-				log.Printf("%s\n", err)
+				logrus.Printf("%s\n", err)
 				return err
 			}
 			caCertPool := x509.NewCertPool()
@@ -109,11 +109,11 @@ func (m *Webhook) Handle(e event.Event) {
 
 	err := postMessage(m.Url, webhookMessage)
 	if err != nil {
-		log.Printf("%s\n", err)
+		logrus.Printf("%s\n", err)
 		return
 	}
 
-	log.Printf("Message successfully sent to %s at %s ", m.Url, time.Now())
+	logrus.Printf("Message successfully sent to %s at %s ", m.Url, time.Now())
 }
 
 func checkMissingWebhookVars(s *Webhook) error {

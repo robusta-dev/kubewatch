@@ -4,11 +4,11 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/sirupsen/logrus"
 	"go/ast"
 	"go/parser"
 	"go/token"
 	"io"
-	"log"
 	"os"
 	"strings"
 
@@ -191,6 +191,6 @@ func main() {
 	flag.Parse()
 
 	if err := mainE(flags); err != nil {
-		log.Fatal(err)
+		logrus.Fatal(err)
 	}
 }

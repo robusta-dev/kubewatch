@@ -23,7 +23,6 @@ package smtp
 
 import (
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/bitnami-labs/kubewatch/config"
@@ -73,7 +72,7 @@ func (s *SMTP) Init(c *config.Config) error {
 // Handle handles the notification.
 func (s *SMTP) Handle(e event.Event) {
 	send(s.cfg, e.Message())
-	log.Printf("Message successfully sent to %s at %s ", s.cfg.To, time.Now())
+	logrus.Printf("Message successfully sent to %s at %s ", s.cfg.To, time.Now())
 }
 
 func formatEmail(e event.Event) (string, error) {

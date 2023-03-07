@@ -18,7 +18,7 @@ package slack
 
 import (
 	"fmt"
-	"log"
+	"github.com/sirupsen/logrus"
 	"os"
 
 	"github.com/slack-go/slack"
@@ -91,11 +91,11 @@ func (s *Slack) Handle(e event.Event) {
 		slack.MsgOptionAttachments(attachment),
 		slack.MsgOptionAsUser(true))
 	if err != nil {
-		log.Printf("%s\n", err)
+		logrus.Printf("%s\n", err)
 		return
 	}
 
-	log.Printf("Message successfully sent to channel %s at %s", channelID, timestamp)
+	logrus.Printf("Message successfully sent to channel %s at %s", channelID, timestamp)
 }
 
 func checkMissingSlackVars(s *Slack) error {

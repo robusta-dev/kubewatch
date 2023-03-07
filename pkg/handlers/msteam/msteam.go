@@ -20,8 +20,8 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/sirupsen/logrus"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"os"
 
@@ -145,9 +145,9 @@ func (ms *MSTeams) Handle(e event.Event) {
 	card.Sections = append(card.Sections, s)
 
 	if _, err := sendCard(ms, card); err != nil {
-		log.Printf("%s\n", err)
+		logrus.Printf("%s\n", err)
 		return
 	}
 
-	log.Printf("Message successfully sent to MS Teams")
+	logrus.Printf("Message successfully sent to MS Teams")
 }
