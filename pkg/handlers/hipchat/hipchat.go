@@ -18,7 +18,7 @@ package hipchat
 
 import (
 	"fmt"
-	"log"
+	"github.com/sirupsen/logrus"
 	"os"
 
 	hipchat "github.com/tbruyelle/hipchat-go/hipchat"
@@ -97,11 +97,11 @@ func (s *Hipchat) Handle(e event.Event) {
 	_, err := client.Room.Notification(s.Room, &notificationRequest)
 
 	if err != nil {
-		log.Printf("%s\n", err)
+		logrus.Printf("%s\n", err)
 		return
 	}
 
-	log.Printf("Message successfully sent to room %s", s.Room)
+	logrus.Printf("Message successfully sent to room %s", s.Room)
 }
 
 func checkMissingHipchatVars(s *Hipchat) error {

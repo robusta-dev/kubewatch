@@ -18,7 +18,7 @@ package cloudevent
 
 import (
 	"fmt"
-	"log"
+	"github.com/sirupsen/logrus"
 	"os"
 
 	"bytes"
@@ -95,11 +95,11 @@ func (m *CloudEvent) Handle(e event.Event) {
 
 	err := m.postMessage(message)
 	if err != nil {
-		log.Printf("%s\n", err)
+		logrus.Printf("%s\n", err)
 		return
 	}
 
-	log.Printf("Message successfully sent to %s at %s ", m.Url, time.Now())
+	logrus.Printf("Message successfully sent to %s at %s ", m.Url, time.Now())
 }
 
 func (m *CloudEvent) prepareMessage(e event.Event) *CloudEventMessage {

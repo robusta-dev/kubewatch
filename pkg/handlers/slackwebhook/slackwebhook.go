@@ -39,7 +39,7 @@ package slackwebhook
 
 import (
 	"fmt"
-	"log"
+	"github.com/sirupsen/logrus"
 	"os"
 	"time"
 
@@ -111,16 +111,16 @@ func (m *SlackWebhook) Handle(e event.Event) {
 		IconEmoji: m.Emoji,
 	}
 
-	log.Printf("slackwebhook-handle():Slackwebhook WebHookMessage: %s", webhookMessage.Text)
+	logrus.Printf("slackwebhook-handle():Slackwebhook WebHookMessage: %s", webhookMessage.Text)
 
 	err := slack.PostWebhook(m.Slackwebhookurl, &webhookMessage)
 
 	if err != nil {
-		log.Printf("slackwebhook-handle() Error: %s\n", err)
+		logrus.Printf("slackwebhook-handle() Error: %s\n", err)
 		return
 	}
 
-	log.Printf("Message successfully sent to %s at %s. Message: %s", m.Slackwebhookurl, time.Now(), webhookMessage.Text)
+	logrus.Printf("Message successfully sent to %s at %s. Message: %s", m.Slackwebhookurl, time.Now(), webhookMessage.Text)
 }
 
 func checkMissingWebhookVars(s *SlackWebhook) error {

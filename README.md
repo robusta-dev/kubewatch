@@ -18,7 +18,7 @@
 # Latest image
 
 ```
-us-central1-docker.pkg.dev/genuine-flight-317411/devel/kubewatch:v2.0
+us-central1-docker.pkg.dev/genuine-flight-317411/devel/kubewatch:v2.2
 ```
 
 # Usage
@@ -34,6 +34,7 @@ for resource changes and notifies them through webhooks.
 supported webhooks:
  - slack
  - slackwebhook
+ - msteams
  - hipchat
  - mattermost
  - flock
@@ -507,6 +508,16 @@ $ kubewatch resource add --rc --po --svc
 
 # rc, po and svc will be stopped from being watched
 $ kubewatch resource remove --rc --po --svc
+```
+
+### Changing log level
+
+In case you change the default log level, add an environment variable named `LOG_LEVEL` with value from `trace/debug/info/warning/error` 
+
+```yaml
+env:
+- name: LOG_LEVEL
+  value: debug
 ```
 
 # Build

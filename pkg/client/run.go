@@ -17,8 +17,6 @@ limitations under the License.
 package client
 
 import (
-	"log"
-
 	"github.com/bitnami-labs/kubewatch/config"
 	"github.com/bitnami-labs/kubewatch/pkg/controller"
 	"github.com/bitnami-labs/kubewatch/pkg/handlers"
@@ -31,6 +29,7 @@ import (
 	"github.com/bitnami-labs/kubewatch/pkg/handlers/slackwebhook"
 	"github.com/bitnami-labs/kubewatch/pkg/handlers/smtp"
 	"github.com/bitnami-labs/kubewatch/pkg/handlers/webhook"
+	"github.com/sirupsen/logrus"
 )
 
 // Run runs the event loop processing with given handler
@@ -67,7 +66,7 @@ func ParseEventHandler(conf *config.Config) handlers.Handler {
 		eventHandler = new(handlers.Default)
 	}
 	if err := eventHandler.Init(conf); err != nil {
-		log.Fatal(err)
+		logrus.Fatal(err)
 	}
 	return eventHandler
 }

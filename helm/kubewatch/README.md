@@ -223,7 +223,7 @@ In case you want to add extra environment variables (useful for advanced operati
 ```yaml
 extraEnvVars:
   - name: LOG_LEVEL
-    value: DEBUG
+    value: debug
 ```
 
 Alternatively, you can use a ConfigMap or a Secret with the environment variables. To do so, use the `extraEnvVarsCM` or the `extraEnvVarsSecret` values.

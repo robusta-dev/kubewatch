@@ -18,7 +18,7 @@ package flock
 
 import (
 	"fmt"
-	"log"
+	"github.com/sirupsen/logrus"
 	"os"
 
 	"bytes"
@@ -92,11 +92,11 @@ func (f *Flock) Handle(e event.Event) {
 
 	err := postMessage(f.Url, flockMessage)
 	if err != nil {
-		log.Printf("%s\n", err)
+		logrus.Printf("%s\n", err)
 		return
 	}
 
-	log.Printf("Message successfully sent to channel %s at %s", f.Url, time.Now())
+	logrus.Printf("Message successfully sent to channel %s at %s", f.Url, time.Now())
 }
 
 func checkMissingFlockVars(s *Flock) error {

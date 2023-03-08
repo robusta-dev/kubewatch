@@ -18,7 +18,7 @@ package mattermost
 
 import (
 	"fmt"
-	"log"
+	"github.com/sirupsen/logrus"
 	"os"
 
 	"bytes"
@@ -104,11 +104,11 @@ func (m *Mattermost) Handle(e event.Event) {
 
 	err := postMessage(m.Url, mattermostMessage)
 	if err != nil {
-		log.Printf("%s\n", err)
+		logrus.Printf("%s\n", err)
 		return
 	}
 
-	log.Printf("Message successfully sent to channel %s at %s", m.Channel, time.Now())
+	logrus.Printf("Message successfully sent to channel %s at %s", m.Channel, time.Now())
 }
 
 func checkMissingMattermostVars(s *Mattermost) error {

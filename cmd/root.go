@@ -72,6 +72,8 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 
+	initLogger()
+
 	// Disable Help subcommand
 	RootCmd.SetHelpCommand(&cobra.Command{
 		Use:    "no-help",
@@ -87,6 +89,20 @@ func init() {
 				logrus.Errorf("Failed to initialize pprof %s", err)
 			}
 		}()
+	}
+}
+
+func initLogger() {
+	logLevel := os.Getenv("LOG_LEVEL")
+	if logLevel != "" {
+		logrus.Printf("Custom log level: %s", logLevel)
+		parsedLevel, err := logrus.ParseLevel(logLevel)
+		if err == nil {
+			logrus.Printf("Setting custom log level to: %s", logLevel)
+			logrus.SetLevel(parsedLevel)
+		} else {
+			logrus.Errorf("Illegal custom log level: %s. Ignoring custom log level", logLevel)
+		}
 	}
 }
 

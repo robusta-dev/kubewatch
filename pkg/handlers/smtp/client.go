@@ -25,7 +25,6 @@ import (
 	"context"
 	"crypto/tls"
 	"fmt"
-	"log"
 	"math/rand"
 	"mime"
 	"mime/multipart"
@@ -220,7 +219,7 @@ func sendEmail(conf config.SMTP, msg string) error {
 		return fmt.Errorf("write body buffer: %w", err)
 	}
 
-	log.Printf("sending via %s:%s, to: %q, from: %q : %s ", host, port, conf.To, conf.From, msg)
+	logrus.Printf("sending via %s:%s, to: %q, from: %q : %s ", host, port, conf.To, conf.From, msg)
 	return nil
 }
 
