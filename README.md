@@ -1,15 +1,19 @@
-**This is the official Kubewatch project, [originally by Bitnami](https://github.com/bitnami-labs/kubewatch/), now maintained by [Robusta.dev](https://home.robusta.dev/). Feel free to open issues and PRs!**
+<div align="center">
+
+**This is the official Kubewatch project, [originally by Bitnami](https://github.com/bitnami-labs/kubewatch/), now maintained by [Robusta.dev](https://home.robusta.dev/).**
+
+**Feel free to open issues, raise PRs or talk with us on [Slack](https://bit.ly/robusta-slack)!**
 
 **kubewatch** is a Kubernetes watcher that publishes notification to available collaboration hubs/notification channels. Run it in your k8s cluster, and you will get event notifications through webhooks.
 
 [See the blog post on KubeWatch 2.0 to learn more about how KubeWatch is used.](https://home.robusta.dev/blog/kubewatch-2-0-released)
 
-<p align="center">
-  <img src="./docs/kubewatch-logo.jpeg">
-</p>
+<img src="./docs/kubewatch-logo.jpeg">
 
 [![GoDoc](https://godoc.org/github.com/bitnami-labs/kubewatch?status.svg)](https://godoc.org/github.com/bitnami-labs/kubewatch) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/bitnami-labs/kubewatch/blob/master/LICENSE)
+[![slack robusta](https://img.shields.io/badge/Slack-Join-4A154B?style=flat-square&logo=slack&logoColor=white)](https://bit.ly/robusta-slack)
 
+</div>
 
 # Latest image
 
