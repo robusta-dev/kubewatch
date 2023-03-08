@@ -14,7 +14,7 @@
 # Latest image
 
 ```
-us-central1-docker.pkg.dev/genuine-flight-317411/devel/kubewatch:v2.1
+us-central1-docker.pkg.dev/genuine-flight-317411/devel/kubewatch:v2.2
 ```
 
 # Usage
@@ -513,7 +513,7 @@ In case you change the default log level, add an environment variable named `LOG
 ```yaml
 env:
 - name: LOG_LEVEL
-  value: DEBUG
+  value: debug
 ```
 
 # Build
