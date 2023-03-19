@@ -54,6 +54,7 @@ rules:
       - get
   - apiGroups:
       - extensions
+      - networking.k8s.io
     resources:
       - daemonsets
       - deployments
