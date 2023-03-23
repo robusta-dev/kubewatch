@@ -20,3 +20,4 @@ data:
       secret: false
       configmap: false
       hpa: false
+      event: true

@@ -11,3 +11,4 @@ resource:
   job: false
   persistentvolume: false
   ingress: false
+  event: false
