@@ -104,6 +104,16 @@ func initLogger() {
 			logrus.Errorf("Illegal custom log level: %s. Ignoring custom log level", logLevel)
 		}
 	}
+	logFormatter := os.Getenv("LOG_FORMATTER")
+	if logFormatter != "" {
+		logrus.Printf("Custom log formatter: %s", logFormatter)
+		if logFormatter == "json" {
+			logrus.Printf("Setting custom log formatter to: %s", logFormatter)
+			logrus.SetFormatter(new(logrus.JSONFormatter))
+		} else {
+			logrus.Errorf("Illegal custom log formatter: %s. Ignoring custom log formatter", logFormatter)
+		}
+	}
 }
 
 // initConfig reads in config file and ENV variables if set.

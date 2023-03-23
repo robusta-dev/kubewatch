@@ -516,12 +516,22 @@ $ kubewatch resource remove --rc --po --svc
 
 ### Changing log level
 
-In case you change the default log level, add an environment variable named `LOG_LEVEL` with value from `trace/debug/info/warning/error` 
+In case you want to change the default log level, add an environment variable named `LOG_LEVEL` with value from `trace/debug/info/warning/error` 
 
 ```yaml
 env:
 - name: LOG_LEVEL
   value: debug
+```
+
+### Changing log format
+
+In case you want to change the log format to `json`, add an environment variable named `LOG_FORMATTER` with value `json`
+
+```yaml
+env:
+- name: LOG_FORMATTER
+  value: json
 ```
 
 # Build
