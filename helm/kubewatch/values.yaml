@@ -188,6 +188,7 @@ namespaceToWatch: ""
 ## @param resourcesToWatch.pod Watch changes to Pods
 ## @param resourcesToWatch.job Watch changes to Jobs
 ## @param resourcesToWatch.persistentvolume Watch changes to PersistentVolumes
+## @param resourcesToWatch.event Watch changes to Events
 ##
 resourcesToWatch:
   deployment: true
@@ -198,6 +199,7 @@ resourcesToWatch:
   pod: true
   job: false
   persistentvolume: false
+  event: true
 ## @param command Override default container command (useful when using custom images)
 ##
 command: []

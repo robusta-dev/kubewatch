@@ -92,6 +92,7 @@ resourcesToWatch:
   secret: false
   configmap: false
   ingress: false
+  event: true
 slack:
   channel: '#YOUR_CHANNEL'
   token: 'xoxb-YOUR_TOKEN'
@@ -147,6 +148,7 @@ resource:
   secret: false
   configmap: false
   ingress: false
+  event: true
 ```
 
 #### Working with RBAC
@@ -341,6 +343,7 @@ data:
       secret: false
       serviceaccount: false
       services: true
+      event: true
     ```
 
 ### flock:
@@ -422,6 +425,7 @@ resource:
   secret: false
   configmap: false
   ingress: false
+  event: true
 namespace: ""
 
 ```
