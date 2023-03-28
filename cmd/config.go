@@ -122,5 +122,6 @@ func init() {
 		cloudEventConfigCmd,
 		msteamsConfigCmd,
 		smtpConfigCmd,
+		larkConfigCmd,
 	)
 }

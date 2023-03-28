@@ -28,7 +28,7 @@ necessary filtering.
 
 Handler manages how `kubewatch` handles events.
 
-With each event get from k8s and matched filtering from configuration, it is passed to handler. Currently, `kubewatch` has 7 handlers:
+With each event get from k8s and matched filtering from configuration, it is passed to handler. Currently, `kubewatch` has 8 handlers:
 
  - `Default`: which just print the event in JSON format
  - `Flock`: which send notification to Flock channel based on information from config
@@ -37,6 +37,7 @@ With each event get from k8s and matched filtering from configuration, it is pas
  - `MS Teams`: which send notification to MS Team incoming webhook based on information from config
  - `Slack`: which send notification to Slack channel based on information from config
  - `Smtp`: which sends notifications to email recipients using a SMTP server obtained from config
+ - `Lark`: which sends notifications to Lark incoming webhook based on information from config
 
 More handlers will be added in future.
 

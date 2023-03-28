@@ -21,6 +21,7 @@ import (
 	"github.com/bitnami-labs/kubewatch/pkg/event"
 	"github.com/bitnami-labs/kubewatch/pkg/handlers/flock"
 	"github.com/bitnami-labs/kubewatch/pkg/handlers/hipchat"
+	"github.com/bitnami-labs/kubewatch/pkg/handlers/lark"
 	"github.com/bitnami-labs/kubewatch/pkg/handlers/mattermost"
 	"github.com/bitnami-labs/kubewatch/pkg/handlers/msteam"
 	"github.com/bitnami-labs/kubewatch/pkg/handlers/slack"
@@ -47,6 +48,7 @@ var Map = map[string]interface{}{
 	"webhook":      &webhook.Webhook{},
 	"ms-teams":     &msteam.MSTeams{},
 	"smtp":         &smtp.SMTP{},
+	"lark":         &lark.Webhook{},
 }
 
 // Default handler implements Handler interface,

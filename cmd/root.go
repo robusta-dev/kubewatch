@@ -48,6 +48,7 @@ supported webhooks:
  - mattermost
  - flock
  - webhook
+ - lark
 `,
 
 	Run: func(cmd *cobra.Command, args []string) {

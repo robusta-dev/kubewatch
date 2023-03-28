@@ -46,6 +46,7 @@ type Handler struct {
 	CloudEvent   CloudEvent   `json:"cloudevent"`
 	MSTeams      MSTeams      `json:"msteams"`
 	SMTP         SMTP         `json:"smtp"`
+	Lark         Lark         `json:"lark"`
 }
 
 // Resource contains resource configuration
@@ -137,6 +138,12 @@ type Webhook struct {
 	Url     string `json:"url"`
 	Cert    string `json:"cert"`
 	TlsSkip bool   `json:"tlsskip"`
+}
+
+// Lark contains lark configuration
+type Lark struct {
+	// Webhook URL.
+	WebhookURL string `json:"webhookurl"`
 }
 
 // CloudEvent contains CloudEvent configuration
