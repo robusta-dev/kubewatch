@@ -1,4 +1,4 @@
-handler:
+handler: 
   flock:
     url: "https://api.flock.com/hooks/sendMessage/XXXXXXXX" # XXXXXXXX to be replaced with incomming webhooks of the flock channl
 resource:
