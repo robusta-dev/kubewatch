@@ -140,6 +140,15 @@ msteams:
 webhook:
   enabled: false
   url: ""
+
+## @param lark.enabled Enable Lark notifications
+## @param lark.url lark webhook URL
+## See: https://open.feishu.cn/document/ukTMukTMukTM/ucTM5YjL3ETO24yNxkjN
+##
+lark:
+  enabled: false
+  webhookurl: ""
+
 smtp:
   ## @param smtp.enabled Enable SMTP (email) notifications
   ##

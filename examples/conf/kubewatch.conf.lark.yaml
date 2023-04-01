@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kubewatch
+data:
+  .kubewatch.yaml: |
+    namespace:
+    handler:
+      lark:
+        webhookurl: https://open.feishu.cn/open-apis/bot/v2/hook/xxxxxxxxxxxxxxxxx
+    resource:
+      namespace: false
+      deployment: false
+      replicationcontroller: false
+      replicaset: false
+      daemonset: false
+      services: false
+      pod: true
+      secret: false
+      configmap: false
