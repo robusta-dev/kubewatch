@@ -85,7 +85,7 @@ hostAliases: []
 ## @param slack.token Slack API token
 ##
 slack:
-  enabled: true
+  enabled: false
   channel: "XXXX"
   ## Create using: https://my.slack.com/services/new/bot and invite the bot to your channel using: /join @botname
   ##

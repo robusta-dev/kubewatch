@@ -77,7 +77,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | `image.pullPolicy`                       | Kubewatch image pull policy                                                      | `IfNotPresent`         |
 | `image.pullSecrets`                      | Specify docker-registry secret names as an array                                 | `[]`                   |
 | `hostAliases`                            | Add deployment host aliases                                                      | `[]`                   |
-| `slack.enabled`                          | Enable Slack notifications                                                       | `true`                 |
+| `slack.enabled`                          | Enable Slack notifications                                                       | `false`                 |
 | `slack.channel`                          | Slack channel to notify                                                          | `XXXX`                 |
 | `slack.token`                            | Slack API token                                                                  | `XXXX`                 |
 | `hipchat.enabled`                        | Enable HipChat notifications                                                     | `false`                |
@@ -190,7 +190,7 @@ Specify each parameter using the `--set key=value[,key=value]` argument to `helm
 
 ```console
 $ helm install my-release bitnami/kubewatch \
-  --set=slack.channel="#bots",slack.token="XXXX-XXXX-XXXX"
+  --set=slack.enabled="true",slack.channel="#bots",slack.token="XXXX-XXXX-XXXX"
 ```
 
 Alternatively, a YAML file that specifies the values for the above parameters can be provided while installing the chart. For example,

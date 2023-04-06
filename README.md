@@ -67,7 +67,7 @@ When you have helm installed in your cluster, use the following setup:
 
 ```console
 helm repo add robusta https://robusta-charts.storage.googleapis.com && helm repo update
-helm install kubewatch robusta/kubewatch --set='rbac.create=true,slack.channel=#YOUR_CHANNEL,slack.token=xoxb-YOUR_TOKEN,resourcesToWatch.pod=true,resourcesToWatch.daemonset=true'
+helm install kubewatch robusta/kubewatch --set='rbac.create=true,slack.enabled=true,slack.channel=#YOUR_CHANNEL,slack.token=xoxb-YOUR_TOKEN,resourcesToWatch.pod=true,resourcesToWatch.daemonset=true'
 ```
 
 You may also provide a values file instead:
