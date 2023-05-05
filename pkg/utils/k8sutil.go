@@ -8,6 +8,7 @@ import (
 	batch_v1 "k8s.io/api/batch/v1"
 	api_v1 "k8s.io/api/core/v1"
 	ext_v1beta1 "k8s.io/api/extensions/v1beta1"
+	networking_v1 "k8s.io/api/networking/v1"
 	rbac_v1beta1 "k8s.io/api/rbac/v1beta1"
 	meta_v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
@@ -78,6 +79,8 @@ func GetObjectMetaData(obj interface{}) (objectMeta meta_v1.ObjectMeta) {
 	case *api_v1.Secret:
 		objectMeta = object.ObjectMeta
 	case *ext_v1beta1.Ingress:
+		objectMeta = object.ObjectMeta
+	case *networking_v1.Ingress:
 		objectMeta = object.ObjectMeta
 	case *api_v1.Node:
 		objectMeta = object.ObjectMeta
