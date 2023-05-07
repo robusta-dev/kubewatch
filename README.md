@@ -18,7 +18,7 @@
 # Latest image
 
 ```
-us-central1-docker.pkg.dev/genuine-flight-317411/devel/kubewatch:v2.3
+us-central1-docker.pkg.dev/genuine-flight-317411/devel/kubewatch:v2.4
 ```
 
 # Usage
