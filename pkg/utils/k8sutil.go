@@ -10,6 +10,7 @@ import (
 	ext_v1beta1 "k8s.io/api/extensions/v1beta1"
 	networking_v1 "k8s.io/api/networking/v1"
 	rbac_v1 "k8s.io/api/rbac/v1"
+	events_v1 "k8s.io/api/events/v1"
 	rbac_v1beta1 "k8s.io/api/rbac/v1beta1"
 	meta_v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
@@ -97,7 +98,7 @@ func GetObjectMetaData(obj interface{}) (objectMeta meta_v1.ObjectMeta) {
 		objectMeta = object.ObjectMeta
 	case *api_v1.ConfigMap:
 		objectMeta = object.ObjectMeta
-	case *api_v1.Event:
+	case *events_v1.Event:
 		objectMeta = object.ObjectMeta
 	}
 	return objectMeta
