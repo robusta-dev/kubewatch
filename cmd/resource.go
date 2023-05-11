@@ -149,6 +149,10 @@ func configureResource(operation string, cmd *cobra.Command, conf *config.Config
 			"statefulset",
 			&conf.Resource.StatefulSet,
 		},
+		{
+			"coreevent",
+			&conf.Resource.CoreEvent,
+		},
 	}
 
 	for _, flag := range flags {
@@ -197,4 +201,5 @@ func init() {
 	resourceConfigCmd.PersistentFlags().Bool("clusterrole", false, "watch for cluster roles")
 	resourceConfigCmd.PersistentFlags().Bool("clusterrolebinding", false, "watch for cluster roles binding")
 	resourceConfigCmd.PersistentFlags().Bool("sa", false, "watch for service accounts")
+	resourceConfigCmd.PersistentFlags().Bool("coreevent", false, "watch for events (old events object)")
 }

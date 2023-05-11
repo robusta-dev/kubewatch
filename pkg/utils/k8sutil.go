@@ -98,6 +98,8 @@ func GetObjectMetaData(obj interface{}) (objectMeta meta_v1.ObjectMeta) {
 		objectMeta = object.ObjectMeta
 	case *api_v1.ConfigMap:
 		objectMeta = object.ObjectMeta
+	case *api_v1.Event:
+		objectMeta = object.ObjectMeta
 	case *events_v1.Event:
 		objectMeta = object.ObjectMeta
 	}

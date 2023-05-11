@@ -97,6 +97,30 @@ func Start(conf *config.Config, eventHandler handlers.Handler) {
 	}
 
 	// User Configured Events
+	if conf.Resource.CoreEvent {
+		allCoreEventsInformer := cache.NewSharedIndexInformer(
+			&cache.ListWatch{
+				ListFunc: func(options meta_v1.ListOptions) (runtime.Object, error) {
+					options.FieldSelector = ""
+					return kubeClient.CoreV1().Events(conf.Namespace).List(context.Background(), options)
+				},
+				WatchFunc: func(options meta_v1.ListOptions) (watch.Interface, error) {
+					options.FieldSelector = ""
+					return kubeClient.CoreV1().Events(conf.Namespace).Watch(context.Background(), options)
+				},
+			},
+			&events_v1.Event{},
+			0, //Skip resync
+			cache.Indexers{},
+		)
+
+		allCoreEventsController := newResourceController(kubeClient, eventHandler, allCoreEventsInformer, objName(api_v1.Event{}), V1)
+		stopAllCoreEventsCh := make(chan struct{})
+		defer close(stopAllCoreEventsCh)
+
+		go allCoreEventsController.Run(stopAllCoreEventsCh)
+	}
+
 	if conf.Resource.Event {
 		allEventsInformer := cache.NewSharedIndexInformer(
 			&cache.ListWatch{

@@ -18,7 +18,7 @@
 # Latest image
 
 ```
-us-central1-docker.pkg.dev/genuine-flight-317411/devel/kubewatch:v2.4
+us-central1-docker.pkg.dev/genuine-flight-317411/devel/kubewatch:v2.5
 ```
 
 # Usage
@@ -92,6 +92,7 @@ resourcesToWatch:
   secret: false
   configmap: false
   ingress: false
+  coreevent: false
   event: true
 slack:
   channel: '#YOUR_CHANNEL'
@@ -148,6 +149,7 @@ resource:
   secret: false
   configmap: false
   ingress: false
+  coreevent: false
   event: true
 ```
 
@@ -344,6 +346,7 @@ data:
       serviceaccount: false
       services: true
       event: true
+      coreevent: false
     ```
 
 ### flock:
@@ -426,6 +429,7 @@ resource:
   configmap: false
   ingress: false
   event: true
+  coreevent: false
 namespace: ""
 
 ```
@@ -467,6 +471,7 @@ Flags:
       --sa                      watch for service accounts
       --secret                  watch for plain secrets
       --svc                     watch for services
+      --coreevent               watch for events from the kubernetes core api. (Old events api, replaced in kubernetes 1.19)
 
 Use "kubewatch resource [command] --help" for more information about a command.
 
@@ -501,6 +506,7 @@ Global Flags:
       --sa                      watch for service accounts
       --secret                  watch for plain secrets
       --svc                     watch for services
+      --coreevent               watch for events from the kubernetes core api. (Old events api, replaced in kubernetes 1.19)
 
 ```
 

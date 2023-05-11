@@ -12,3 +12,4 @@ resource:
   persistentvolume: false
   ingress: false
   event: false
+  coreevent: false
