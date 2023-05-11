@@ -20,4 +20,5 @@ data:
       secret: false
       configmap: false
       hpa: false
+      coreevent: false
       event: true

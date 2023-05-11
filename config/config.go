@@ -70,6 +70,7 @@ type Resource struct {
 	Ingress               bool `json:"ing"`
 	HPA                   bool `json:"hpa"`
 	Event                 bool `json:"event"`
+	CoreEvent             bool `json:"coreevent"`
 }
 
 // Config struct contains kubewatch configuration

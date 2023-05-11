@@ -36,6 +36,7 @@ import (
 	autoscaling_v1 "k8s.io/api/autoscaling/v1"
 	batch_v1 "k8s.io/api/batch/v1"
 	api_v1 "k8s.io/api/core/v1"
+	events_v1 "k8s.io/api/events/v1"
 	networking_v1 "k8s.io/api/networking/v1"
 	rbac_v1 "k8s.io/api/rbac/v1"
 	meta_v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -56,6 +57,7 @@ const APPS_V1 = "apps/v1"
 const BATCH_V1 = "batch/v1"
 const RBAC_V1 = "rbac.authorization.k8s.io/v1"
 const NETWORKING_V1 = "networking.k8s.io/v1"
+const EVENTS_V1 = "events.k8s.io/v1"
 
 var serverStartTime time.Time
 
@@ -95,8 +97,8 @@ func Start(conf *config.Config, eventHandler handlers.Handler) {
 	}
 
 	// User Configured Events
-	if conf.Resource.Event {
-		allEventsInformer := cache.NewSharedIndexInformer(
+	if conf.Resource.CoreEvent {
+		allCoreEventsInformer := cache.NewSharedIndexInformer(
 			&cache.ListWatch{
 				ListFunc: func(options meta_v1.ListOptions) (runtime.Object, error) {
 					options.FieldSelector = ""
@@ -112,7 +114,31 @@ func Start(conf *config.Config, eventHandler handlers.Handler) {
 			cache.Indexers{},
 		)
 
-		allEventsController := newResourceController(kubeClient, eventHandler, allEventsInformer, objName(api_v1.Event{}), V1)
+		allCoreEventsController := newResourceController(kubeClient, eventHandler, allCoreEventsInformer, objName(api_v1.Event{}), V1)
+		stopAllCoreEventsCh := make(chan struct{})
+		defer close(stopAllCoreEventsCh)
+
+		go allCoreEventsController.Run(stopAllCoreEventsCh)
+	}
+
+	if conf.Resource.Event {
+		allEventsInformer := cache.NewSharedIndexInformer(
+			&cache.ListWatch{
+				ListFunc: func(options meta_v1.ListOptions) (runtime.Object, error) {
+					options.FieldSelector = ""
+					return kubeClient.EventsV1().Events(conf.Namespace).List(context.Background(), options)
+				},
+				WatchFunc: func(options meta_v1.ListOptions) (watch.Interface, error) {
+					options.FieldSelector = ""
+					return kubeClient.EventsV1().Events(conf.Namespace).Watch(context.Background(), options)
+				},
+			},
+			&events_v1.Event{},
+			0, //Skip resync
+			cache.Indexers{},
+		)
+
+		allEventsController := newResourceController(kubeClient, eventHandler, allEventsInformer, objName(events_v1.Event{}), EVENTS_V1)
 		stopAllEventsCh := make(chan struct{})
 		defer close(stopAllEventsCh)
 
