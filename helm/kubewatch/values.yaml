@@ -140,7 +140,12 @@ msteams:
 webhook:
   enabled: false
   url: ""
-
+## @param cloudevent.enabled Enable Cloudevent notifications
+## @param cloudevent.url Cloudevent URL
+##
+cloudevent:
+  enabled: false
+  url: ""
 ## @param lark.enabled Enable Lark notifications
 ## @param lark.url lark webhook URL
 ## See: https://open.feishu.cn/document/ukTMukTMukTM/ucTM5YjL3ETO24yNxkjN
