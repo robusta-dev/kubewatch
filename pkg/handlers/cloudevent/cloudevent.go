@@ -17,17 +17,15 @@ limitations under the License.
 package cloudevent
 
 import (
+	"context"
 	"fmt"
-	"github.com/sirupsen/logrus"
 	"os"
-
-	"bytes"
-	"encoding/json"
-	"net/http"
 	"time"
 
 	"github.com/bitnami-labs/kubewatch/config"
 	"github.com/bitnami-labs/kubewatch/pkg/event"
+	cloudevents "github.com/cloudevents/sdk-go/v2"
+	"github.com/sirupsen/logrus"
 	"k8s.io/apimachinery/pkg/runtime"
 )
 
@@ -49,17 +47,8 @@ type CloudEvent struct {
 	Url       string
 	StartTime uint64
 	Counter   uint64
-}
 
-type CloudEventMessage struct {
-	SpecVersion     string                `json:"specversion"`
-	Type            string                `json:"type"`
-	Source          string                `json:"source"`
-	Subject         string                `json:"subject"`
-	ID              string                `json:"id"`
-	Time            time.Time             `json:"time"`
-	DataContentType string                `json:"datacontenttype"`
-	Data            CloudEventMessageData `json:"data"`
+	cloudeventsClient cloudevents.Client
 }
 
 // EventMeta containes the meta data about the event occurred
@@ -86,39 +75,46 @@ func (m *CloudEvent) Init(c *config.Config) error {
 		return fmt.Errorf(cloudEventErrMsg, "Missing cloudevent url")
 	}
 
+	var err error
+	m.cloudeventsClient, err = cloudevents.NewClientHTTP()
+	if err != nil {
+		return fmt.Errorf("failed to create client, %v", err)
+	}
+
 	return nil
 }
 
 func (m *CloudEvent) Handle(e event.Event) {
 	m.Counter++ // TODO: do we have to worry about threadsafety here?
-	message := m.prepareMessage(e)
 
-	err := m.postMessage(message)
-	if err != nil {
-		logrus.Printf("%s\n", err)
+	event := cloudevents.NewEvent()
+	event.SetSource("https://github.com/robusta-dev/kubewatch")
+	event.SetType("KUBERNETES_TOPOLOGY_CHANGE")
+	event.SetTime(time.Now())
+	event.SetID(fmt.Sprintf("%v-%v", m.StartTime, m.Counter))
+	if dataAssignmentError := event.SetData(cloudevents.ApplicationJSON, m.prepareMessage(e)); dataAssignmentError != nil {
+		logrus.Printf("Failed to set data: %v", dataAssignmentError)
+		return
+	}
+
+	result := m.cloudeventsClient.Send(cloudevents.ContextWithTarget(context.Background(), m.Url), event)
+	if result != nil && cloudevents.IsUndelivered(result) {
+		logrus.Printf("Failed to send: %v", result)
 		return
 	}
 
 	logrus.Printf("Message successfully sent to %s at %s ", m.Url, time.Now())
 }
 
-func (m *CloudEvent) prepareMessage(e event.Event) *CloudEventMessage {
-	return &CloudEventMessage{
-		SpecVersion:     "1.0",
-		Type:            "KUBERNETES_TOPOLOGY_CHANGE",
-		Source:          "https://github.com/aantn/kubewatch",
-		ID:              fmt.Sprintf("%v-%v", m.StartTime, m.Counter),
-		Time:            time.Now(), // TODO: verify that time format is correct - note that this is the time of sending not time of event
-		DataContentType: "application/json",
-		Data: CloudEventMessageData{
-			Operation:   m.formatReason(e),
-			Kind:        e.Kind,
-			ApiVersion:  e.ApiVersion,
-			ClusterUid:  "TODO",
-			Description: e.Message(),
-			Obj:         e.Obj,
-			OldObj:      e.OldObj,
-		},
+func (m *CloudEvent) prepareMessage(e event.Event) *CloudEventMessageData {
+	return &CloudEventMessageData{
+		Operation:   m.formatReason(e),
+		Kind:        e.Kind,
+		ApiVersion:  e.ApiVersion,
+		ClusterUid:  "TODO",
+		Description: e.Message(),
+		Obj:         e.Obj,
+		OldObj:      e.OldObj,
 	}
 }
 
@@ -133,26 +129,4 @@ func (m *CloudEvent) formatReason(e event.Event) string {
 	default:
 		return "unknown"
 	}
-}
-
-func (m *CloudEvent) postMessage(webhookMessage *CloudEventMessage) error {
-	message, err := json.Marshal(webhookMessage)
-	if err != nil {
-		return err
-	}
-
-	req, err := http.NewRequest("POST", m.Url, bytes.NewBuffer(message))
-	if err != nil {
-		return err
-	}
-	req.Header.Add("Content-Type", "application/json")
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
-
-	return nil
 }
