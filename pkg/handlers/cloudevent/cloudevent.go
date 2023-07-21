@@ -98,7 +98,7 @@ func (m *CloudEvent) Handle(e event.Event) {
 	}
 
 	result := m.cloudeventsClient.Send(cloudevents.ContextWithTarget(context.Background(), m.Url), event)
-	if result != nil && cloudevents.IsUndelivered(result) {
+	if cloudevents.IsNACK(result) || cloudevents.IsUndelivered(result) {
 		logrus.Printf("Failed to send: %v", result)
 		return
 	}
