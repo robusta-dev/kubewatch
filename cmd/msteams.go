@@ -18,6 +18,7 @@ package cmd
 
 import (
 	"github.com/bitnami-labs/kubewatch/config"
+	"github.com/bitnami-labs/kubewatch/pkg/message"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
@@ -42,6 +43,8 @@ var msteamsConfigCmd = &cobra.Command{
 			logrus.Fatal(err)
 		}
 
+		message.SetTitleCmd(cmd, args, conf)
+
 		if err = conf.Write(); err != nil {
 			logrus.Fatal(err)
 		}
@@ -50,4 +53,5 @@ var msteamsConfigCmd = &cobra.Command{
 
 func init() {
 	msteamsConfigCmd.Flags().StringP("webhookurl", "w", "", "Specify MS Teams webhook URL")
+	msteamsConfigCmd.Flags().StringP("title", "", "", "Specify msg title")
 }
