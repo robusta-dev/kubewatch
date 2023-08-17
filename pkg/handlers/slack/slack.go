@@ -18,13 +18,15 @@ package slack
 
 import (
 	"fmt"
-	"github.com/sirupsen/logrus"
 	"os"
+
+	"github.com/sirupsen/logrus"
 
 	"github.com/slack-go/slack"
 
 	"github.com/bitnami-labs/kubewatch/config"
 	"github.com/bitnami-labs/kubewatch/pkg/event"
+	"github.com/bitnami-labs/kubewatch/pkg/message"
 )
 
 var slackColors = map[string]string{
@@ -58,7 +60,6 @@ type Slack struct {
 func (s *Slack) Init(c *config.Config) error {
 	token := c.Handler.Slack.Token
 	channel := c.Handler.Slack.Channel
-	title := c.Handler.Slack.Title
 
 	if token == "" {
 		token = os.Getenv("KW_SLACK_TOKEN")
@@ -68,16 +69,9 @@ func (s *Slack) Init(c *config.Config) error {
 		channel = os.Getenv("KW_SLACK_CHANNEL")
 	}
 
-	if title == "" {
-		title = os.Getenv("KW_SLACK_TITLE")
-		if title == "" {
-			title = "kubewatch"
-		}
-	}
-
 	s.Token = token
 	s.Channel = channel
-	s.Title = title
+	s.Title = message.GetTitle(c.Handler.Message.Title, "KW_SLACK_TITLE")
 
 	return checkMissingSlackVars(s)
 }

@@ -45,6 +45,7 @@ type Handler struct {
 	Webhook      Webhook      `json:"webhook"`
 	CloudEvent   CloudEvent   `json:"cloudevent"`
 	MSTeams      MSTeams      `json:"msteams"`
+	Message      Message      `json:"message"`
 	SMTP         SMTP         `json:"smtp"`
 	Lark         Lark         `json:"lark"`
 }
@@ -88,6 +89,12 @@ type Config struct {
 	Namespace string `json:"namespace,omitempty"`
 }
 
+// Message contains message configuration.
+type Message struct {
+	// Message title.
+	Title string `json:"title"`
+}
+
 // Slack contains slack configuration
 type Slack struct {
 	// Slack "legacy" API token.
@@ -95,7 +102,7 @@ type Slack struct {
 	// Slack channel.
 	Channel string `json:"channel"`
 	// Title of the message.
-	Title string `json:"title"`
+	//Title string `json:"title"` // moved to Message
 }
 
 // SlackWebhook contains slack configuration

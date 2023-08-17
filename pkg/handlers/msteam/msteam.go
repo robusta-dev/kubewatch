@@ -20,13 +20,14 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/sirupsen/logrus"
 	"io/ioutil"
 	"net/http"
 	"os"
 
 	"github.com/bitnami-labs/kubewatch/config"
 	"github.com/bitnami-labs/kubewatch/pkg/event"
+	"github.com/bitnami-labs/kubewatch/pkg/message"
+	"github.com/sirupsen/logrus"
 )
 
 var msteamsErrMsg = `
@@ -84,6 +85,8 @@ type TeamsMessageCardSectionFacts struct {
 type MSTeams struct {
 	// TeamsWebhookURL is the webhook url of the Teams connector
 	TeamsWebhookURL string
+	//Message         string
+	Title string
 }
 
 // sendCard sends the JSON Encoded TeamsMessageCard to the webhook URL
@@ -123,6 +126,7 @@ func (ms *MSTeams) Init(c *config.Config) error {
 		return fmt.Errorf(msteamsErrMsg, "Missing MS teams webhook URL")
 	}
 
+	ms.Title = message.GetTitle(c.Handler.Message.Title, "KW_MSTEAMS_TITLE")
 	ms.TeamsWebhookURL = webhookURL
 	return nil
 }
@@ -132,9 +136,9 @@ func (ms *MSTeams) Handle(e event.Event) {
 	card := &TeamsMessageCard{
 		Type:    messageType,
 		Context: context,
-		Title:   "kubewatch",
+		Title:   ms.Title,
 		// Set a default Summary, this is required for Microsoft Teams
-		Summary: "kubewatch notification received",
+		Summary: fmt.Sprintf("%s notification received", ms.Title),
 	}
 
 	card.ThemeColor = msTeamsColors[e.Status]
