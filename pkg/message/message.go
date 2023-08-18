@@ -29,7 +29,7 @@ func SetTitleCmd(cmd *cobra.Command, args []string, conf *config.Config) {
 	title, err := cmd.Flags().GetString("title")
 	if err == nil {
 		if len(title) > 0 {
-			conf.Handler.Message.Title = title
+			conf.Message.Title = title
 		}
 	}
 }

@@ -19,7 +19,7 @@ limitations under the License.
 package config
 
 import (
-	"io/ioutil"
+	"io"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -45,7 +45,6 @@ type Handler struct {
 	Webhook      Webhook      `json:"webhook"`
 	CloudEvent   CloudEvent   `json:"cloudevent"`
 	MSTeams      MSTeams      `json:"msteams"`
-	Message      Message      `json:"message"`
 	SMTP         SMTP         `json:"smtp"`
 	Lark         Lark         `json:"lark"`
 }
@@ -87,6 +86,9 @@ type Config struct {
 	// For watching specific namespace, leave it empty for watching all.
 	// this config is ignored when watching namespaces
 	Namespace string `json:"namespace,omitempty"`
+
+	// Message properties .
+	Message Message `json:"message"`
 }
 
 // Message contains message configuration.
@@ -236,7 +238,7 @@ func (c *Config) Load() error {
 		return err
 	}
 
-	b, err := ioutil.ReadAll(file)
+	b, err := io.ReadAll(file)
 	if err != nil {
 		return err
 	}

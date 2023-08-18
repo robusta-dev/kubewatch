@@ -71,7 +71,7 @@ func (s *Slack) Init(c *config.Config) error {
 
 	s.Token = token
 	s.Channel = channel
-	s.Title = message.GetTitle(c.Handler.Message.Title, "KW_SLACK_TITLE")
+	s.Title = message.GetTitle(c.Message.Title, "KW_SLACK_TITLE")
 
 	return checkMissingSlackVars(s)
 }

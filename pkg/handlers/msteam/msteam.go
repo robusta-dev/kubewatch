@@ -126,7 +126,7 @@ func (ms *MSTeams) Init(c *config.Config) error {
 		return fmt.Errorf(msteamsErrMsg, "Missing MS teams webhook URL")
 	}
 
-	ms.Title = message.GetTitle(c.Handler.Message.Title, "KW_MSTEAMS_TITLE")
+	ms.Title = message.GetTitle(c.Message.Title, "KW_MSTEAMS_TITLE")
 	ms.TeamsWebhookURL = webhookURL
 	return nil
 }
