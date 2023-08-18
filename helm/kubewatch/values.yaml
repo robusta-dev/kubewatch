@@ -84,6 +84,9 @@ hostAliases: []
 ## @param slack.channel Slack channel to notify
 ## @param slack.token Slack API token
 ##
+message:
+  ## @param message.title Used msg title in slack and msteams
+  title: "XXXX"
 slack:
   enabled: true
   channel: "XXXX"
