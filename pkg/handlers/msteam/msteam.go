@@ -148,10 +148,11 @@ func (ms *MSTeams) Handle(e event.Event) {
 	s.Markdown = true
 	card.Sections = append(card.Sections, s)
 
-	if _, err := sendCard(ms, card); err != nil {
+	response, err := sendCard(ms, card)
+	if err != nil {
 		logrus.Printf("%s\n", err)
 		return
 	}
 
-	logrus.Printf("Message successfully sent to MS Teams")
+	logrus.Printf("Message successfully sent to MS Teams with status code %d\n", response.StatusCode)
 }
