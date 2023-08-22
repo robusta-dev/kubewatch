@@ -20,7 +20,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"os"
 
@@ -28,6 +28,8 @@ import (
 	"github.com/bitnami-labs/kubewatch/pkg/event"
 	"github.com/bitnami-labs/kubewatch/pkg/message"
 	"github.com/sirupsen/logrus"
+
+	"github.com/wI2L/jsondiff"
 )
 
 var msteamsErrMsg = `
@@ -101,7 +103,7 @@ func sendCard(ms *MSTeams, card *TeamsMessageCard) (*http.Response, error) {
 			ms.TeamsWebhookURL, err)
 	}
 	if res.StatusCode != http.StatusOK {
-		resMessage, err := ioutil.ReadAll(res.Body)
+		resMessage, err := io.ReadAll(res.Body)
 		if err != nil {
 			return nil, fmt.Errorf("Failed reading Teams http response: %v", err)
 		}
@@ -140,19 +142,46 @@ func (ms *MSTeams) Handle(e event.Event) {
 		// Set a default Summary, this is required for Microsoft Teams
 		Summary: fmt.Sprintf("%s notification received", ms.Title),
 	}
-
 	card.ThemeColor = msTeamsColors[e.Status]
-
 	var s TeamsMessageCardSection
-	s.ActivityTitle = e.Message()
+	s.Facts = append(s.Facts, TeamsMessageCardSectionFacts{
+		Name:  "Type",
+		Value: e.Kind,
+	})
+	s.Facts = append(s.Facts, TeamsMessageCardSectionFacts{
+		Name:  "Name",
+		Value: e.Name,
+	})
+	s.Facts = append(s.Facts, TeamsMessageCardSectionFacts{
+		Name:  "Action",
+		Value: e.Reason,
+	})
+	s.Facts = append(s.Facts, TeamsMessageCardSectionFacts{
+		Name:  "Namespace",
+		Value: e.Namespace,
+	})
 	s.Markdown = true
+	card.Text = compareObjects(e)
+	//TODO: Ignore metadata & status changes
 	card.Sections = append(card.Sections, s)
 
-	response, err := sendCard(ms, card)
-	if err != nil {
+	if _, err := sendCard(ms, card); err != nil {
 		logrus.Printf("%s\n", err)
 		return
 	}
 
-	logrus.Printf("Message successfully sent to MS Teams with status code %d\n", response.StatusCode)
+	logrus.Printf("Message successfully sent to MS Teams")
+}
+
+func compareObjects(e event.Event) string {
+	//jsondiff.CompareJSON(source, target)
+	patch, err := jsondiff.Compare(e.OldObj, e.Obj)
+	if err != nil {
+		logrus.Printf("Error in comparing objects %s", err)
+	}
+	b, err := json.MarshalIndent(patch, "", "    ")
+	if err != nil {
+		logrus.Printf("Error in marshalling patch %s", err)
+	}
+	return fmt.Sprintf("```%s```", string(b))
 }
