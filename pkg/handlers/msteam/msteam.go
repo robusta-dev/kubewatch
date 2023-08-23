@@ -160,6 +160,10 @@ func (ms *MSTeams) Handle(e event.Event) {
 		Name:  "Namespace",
 		Value: e.Namespace,
 	})
+	s.Facts = append(s.Facts, TeamsMessageCardSectionFacts{
+		Name:  "Status",
+		Value: e.Status,
+	})
 	s.Markdown = true
 	card.Text = compareObjects(e)
 	//TODO: Ignore metadata & status changes
