@@ -28,8 +28,6 @@ import (
 	"github.com/bitnami-labs/kubewatch/pkg/event"
 	"github.com/bitnami-labs/kubewatch/pkg/message"
 	"github.com/sirupsen/logrus"
-
-	"github.com/wI2L/jsondiff"
 )
 
 var msteamsErrMsg = `
@@ -95,19 +93,18 @@ type MSTeams struct {
 func sendCard(ms *MSTeams, card *TeamsMessageCard) (*http.Response, error) {
 	buffer := new(bytes.Buffer)
 	if err := json.NewEncoder(buffer).Encode(card); err != nil {
-		return nil, fmt.Errorf("Failed encoding message card: %v", err)
+		return nil, fmt.Errorf("failed encoding message card: %v", err)
 	}
 	res, err := http.Post(ms.TeamsWebhookURL, "application/json", buffer)
 	if err != nil {
-		return nil, fmt.Errorf("Failed sending to webhook url %s. Got the error: %v",
-			ms.TeamsWebhookURL, err)
+		return nil, fmt.Errorf("failed sending to webhook url %s. got the error: %v", ms.TeamsWebhookURL, err)
 	}
 	if res.StatusCode != http.StatusOK {
 		resMessage, err := io.ReadAll(res.Body)
 		if err != nil {
-			return nil, fmt.Errorf("Failed reading Teams http response: %v", err)
+			return nil, fmt.Errorf("failed reading teams http response: %v", err)
 		}
-		return nil, fmt.Errorf("Failed sending to the Teams Channel. Teams http response: %s, %s",
+		return nil, fmt.Errorf("failed sending to the teams channel. teams http response: %s, %s",
 			res.Status, string(resMessage))
 	}
 	if err := res.Body.Close(); err != nil {
@@ -165,7 +162,8 @@ func (ms *MSTeams) Handle(e event.Event) {
 		Value: e.Status,
 	})
 	s.Markdown = true
-	card.Text = compareObjects(e)
+	card.Text = e.Diff
+
 	//TODO: Ignore metadata & status changes
 	card.Sections = append(card.Sections, s)
 
@@ -175,17 +173,4 @@ func (ms *MSTeams) Handle(e event.Event) {
 	}
 
 	logrus.Printf("Message successfully sent to MS Teams")
-}
-
-func compareObjects(e event.Event) string {
-	//jsondiff.CompareJSON(source, target)
-	patch, err := jsondiff.Compare(e.OldObj, e.Obj)
-	if err != nil {
-		logrus.Printf("Error in comparing objects %s", err)
-	}
-	b, err := json.MarshalIndent(patch, "", "    ")
-	if err != nil {
-		logrus.Printf("Error in marshalling patch %s", err)
-	}
-	return fmt.Sprintf("```%s```", string(b))
 }

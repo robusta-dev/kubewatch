@@ -15,6 +15,7 @@ package event
 
 import (
 	"fmt"
+
 	"k8s.io/apimachinery/pkg/runtime"
 )
 
@@ -30,8 +31,9 @@ type Event struct {
 	Reason     string
 	Status     string
 	Name       string
-	Obj        runtime.Object
-	OldObj     runtime.Object
+	Obj        runtime.Object // not needed anymore after we have the Diff
+	OldObj     runtime.Object // not needed anymore after we have the Diff
+	Diff       string
 }
 
 var m = map[string]string{

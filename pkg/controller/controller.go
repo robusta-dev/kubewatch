@@ -18,6 +18,7 @@ package controller
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"os"
 	"os/signal"
@@ -31,6 +32,7 @@ import (
 	"github.com/bitnami-labs/kubewatch/pkg/handlers"
 	"github.com/bitnami-labs/kubewatch/pkg/utils"
 	"github.com/sirupsen/logrus"
+	"github.com/wI2L/jsondiff"
 
 	apps_v1 "k8s.io/api/apps/v1"
 	autoscaling_v1 "k8s.io/api/autoscaling/v1"
@@ -627,7 +629,7 @@ func (c *Controller) Run(stopCh <-chan struct{}) {
 	go c.informer.Run(stopCh)
 
 	if !cache.WaitForCacheSync(stopCh, c.HasSynced) {
-		utilruntime.HandleError(fmt.Errorf("Timed out waiting for caches to sync"))
+		utilruntime.HandleError(fmt.Errorf("timed out waiting for caches to sync"))
 		return
 	}
 
@@ -687,7 +689,7 @@ func (c *Controller) processItem(newEvent Event) error {
 	obj, _, err := c.informer.GetIndexer().GetByKey(newEvent.key)
 
 	if err != nil {
-		return fmt.Errorf("Error fetching object with key %s from store: %v", newEvent.key, err)
+		return fmt.Errorf("error fetching object with key %s from store: %v", newEvent.key, err)
 	}
 	// get object's metedata
 	objectMeta := utils.GetObjectMetaData(obj)
@@ -735,9 +737,6 @@ func (c *Controller) processItem(newEvent Event) error {
 			return nil
 		}
 	case "update":
-		/* TODOs
-		- enahace update event processing in such a way that, it send alerts about what got changed.
-		*/
 		switch newEvent.resourceType {
 		case "Backoff":
 			status = "Danger"
@@ -753,7 +752,13 @@ func (c *Controller) processItem(newEvent Event) error {
 			Reason:     "Updated",
 			Obj:        newEvent.obj,
 			OldObj:     newEvent.oldObj,
+			Diff:       compareObjects(newEvent),
 		}
+		if kbEvent.Diff == "" {
+			logrus.Printf("No diff found for %s", newEvent.key)
+			return nil
+		}
+
 		c.eventHandler.Handle(kbEvent)
 		return nil
 	case "delete":
@@ -770,4 +775,21 @@ func (c *Controller) processItem(newEvent Event) error {
 		return nil
 	}
 	return nil
+}
+
+func compareObjects(e Event) string {
+	//jsondiff.CompareJSON(source, target)
+	patch, err := jsondiff.Compare(e.oldObj.DeepCopyObject(), e.obj.DeepCopyObject(), jsondiff.Ignores("/metadata", "/status", "/spec")) //TODO: Extract to config
+	if err != nil {
+		logrus.Printf("Error in comparing objects %s", err)
+	}
+	b, err := json.MarshalIndent(patch, "", "    ")
+	if err != nil {
+		logrus.Printf("Error in marshalling patch %s", err)
+	}
+	if b == nil || string(b) == "null" {
+		return ""
+	}
+
+	return string(b)
 }
