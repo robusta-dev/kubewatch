@@ -62,6 +62,7 @@ const NETWORKING_V1 = "networking.k8s.io/v1"
 const EVENTS_V1 = "events.k8s.io/v1"
 
 var serverStartTime time.Time
+var confDiff config.Diff
 
 // Event indicate the informerEvent
 type Event struct {
@@ -97,6 +98,8 @@ func Start(conf *config.Config, eventHandler handlers.Handler) {
 	} else {
 		kubeClient = utils.GetClient()
 	}
+
+	confDiff = conf.Diff
 
 	// User Configured Events
 	if conf.Resource.CoreEvent {
@@ -743,6 +746,13 @@ func (c *Controller) processItem(newEvent Event) error {
 		default:
 			status = "Warning"
 		}
+
+		diffStr := compareObjects(newEvent)
+
+		if !confDiff.Enabled {
+			diffStr = ""
+		}
+
 		kbEvent := event.Event{
 			Name:       newEvent.key,
 			Namespace:  newEvent.namespace,
@@ -752,10 +762,11 @@ func (c *Controller) processItem(newEvent Event) error {
 			Reason:     "Updated",
 			Obj:        newEvent.obj,
 			OldObj:     newEvent.oldObj,
-			Diff:       compareObjects(newEvent),
+			Diff:       diffStr,
 		}
-		if kbEvent.Diff == "" {
-			logrus.Printf("No diff found for %s", newEvent.key)
+
+		if confDiff.Enabled && kbEvent.Diff == "" {
+			logrus.Printf("No diff( or ingored paths) found for %s", newEvent.key)
 			return nil
 		}
 
@@ -779,7 +790,7 @@ func (c *Controller) processItem(newEvent Event) error {
 
 func compareObjects(e Event) string {
 	//jsondiff.CompareJSON(source, target)
-	patch, err := jsondiff.Compare(e.oldObj.DeepCopyObject(), e.obj.DeepCopyObject(), jsondiff.Ignores("/metadata", "/status", "/spec")) //TODO: Extract to config
+	patch, err := jsondiff.Compare(e.oldObj.DeepCopyObject(), e.obj.DeepCopyObject(), jsondiff.Ignores(confDiff.IgnorePath...))
 	if err != nil {
 		logrus.Printf("Error in comparing objects %s", err)
 	}

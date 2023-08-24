@@ -89,6 +89,13 @@ type Config struct {
 
 	// Message properties .
 	Message Message `json:"message"`
+	// Diff properties .
+	Diff Diff `json:"diff"`
+}
+
+type Diff struct {
+	Enabled    bool     `json:"enabled"`
+	IgnorePath []string `json:"ignore"`
 }
 
 // Message contains message configuration.
