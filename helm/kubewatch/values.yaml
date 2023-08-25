@@ -40,11 +40,11 @@ diagnosticMode:
   ## @param diagnosticMode.command Command to override all containers in the the deployment(s)/statefulset(s)
   ##
   command:
-    - sleep
+  - sleep
   ## @param diagnosticMode.args Args to override all containers in the the deployment(s)/statefulset(s)
   ##
   args:
-    - infinity
+  - infinity
 ## @param extraDeploy Array of extra objects to deploy with the release
 ##
 extraDeploy: []
@@ -87,6 +87,12 @@ hostAliases: []
 message:
   ## @param message.title Used msg title in slack and msteams
   title: "XXXX"
+diff:
+enabled: false
+ignore:
+##- "/metadata"
+##- "/status"
+##- "/metadata/replicas"
 slack:
   enabled: true
   channel: "XXXX"

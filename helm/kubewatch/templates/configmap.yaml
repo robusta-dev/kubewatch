@@ -48,3 +48,10 @@ data:
       {{- end }}
     resource: {{- toYaml .Values.resourcesToWatch | nindent 6 }}
     namespace: {{ .Values.namespaceToWatch | quote }}
+    message: 
+      title: {{ .Values.message.title | quote }}
+    {{- if .Values.dff.enabled -}}
+    diff:
+      enabled: {{ .Values.diff.enabled }}
+      ignore: {{- toYaml .Values.diff.ignore | nindent 8 }}
+    {{- end }}
