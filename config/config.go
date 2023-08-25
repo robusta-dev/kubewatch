@@ -37,172 +37,172 @@ var (
 
 // Handler contains handler configuration
 type Handler struct {
-	Slack        Slack        `json:"slack"`
-	SlackWebhook SlackWebhook `json:"slackwebhook"`
-	Hipchat      Hipchat      `json:"hipchat"`
-	Mattermost   Mattermost   `json:"mattermost"`
-	Flock        Flock        `json:"flock"`
-	Webhook      Webhook      `json:"webhook"`
-	CloudEvent   CloudEvent   `json:"cloudevent"`
-	MSTeams      MSTeams      `json:"msteams"`
-	SMTP         SMTP         `json:"smtp"`
-	Lark         Lark         `json:"lark"`
+	Slack        Slack        `yaml:"slack"`
+	SlackWebhook SlackWebhook `yaml:"slackwebhook"`
+	Hipchat      Hipchat      `yaml:"hipchat"`
+	Mattermost   Mattermost   `yaml:"mattermost"`
+	Flock        Flock        `yaml:"flock"`
+	Webhook      Webhook      `yaml:"webhook"`
+	CloudEvent   CloudEvent   `yaml:"cloudevent"`
+	MSTeams      MSTeams      `yaml:"msteams"`
+	SMTP         SMTP         `yaml:"smtp"`
+	Lark         Lark         `yaml:"lark"`
 }
 
 // Resource contains resource configuration
 type Resource struct {
-	Deployment            bool `json:"deployment"`
-	ReplicationController bool `json:"rc"`
-	ReplicaSet            bool `json:"rs"`
-	DaemonSet             bool `json:"ds"`
-	StatefulSet           bool `json:"statefulset"`
-	Services              bool `json:"svc"`
-	Pod                   bool `json:"po"`
-	Job                   bool `json:"job"`
-	Node                  bool `json:"node"`
-	ClusterRole           bool `json:"clusterrole"`
-	ClusterRoleBinding    bool `json:"clusterrolebinding"`
-	ServiceAccount        bool `json:"sa"`
-	PersistentVolume      bool `json:"pv"`
-	Namespace             bool `json:"ns"`
-	Secret                bool `json:"secret"`
-	ConfigMap             bool `json:"configmap"`
-	Ingress               bool `json:"ing"`
-	HPA                   bool `json:"hpa"`
-	Event                 bool `json:"event"`
-	CoreEvent             bool `json:"coreevent"`
+	Deployment            bool `yaml:"deployment"`
+	ReplicationController bool `yaml:"rc"`
+	ReplicaSet            bool `yaml:"rs"`
+	DaemonSet             bool `yaml:"ds"`
+	StatefulSet           bool `yaml:"statefulset"`
+	Services              bool `yaml:"svc"`
+	Pod                   bool `yaml:"po"`
+	Job                   bool `yaml:"job"`
+	Node                  bool `yaml:"node"`
+	ClusterRole           bool `yaml:"clusterrole"`
+	ClusterRoleBinding    bool `yaml:"clusterrolebinding"`
+	ServiceAccount        bool `yaml:"sa"`
+	PersistentVolume      bool `yaml:"pv"`
+	Namespace             bool `yaml:"ns"`
+	Secret                bool `yaml:"secret"`
+	ConfigMap             bool `yaml:"configmap"`
+	Ingress               bool `yaml:"ing"`
+	HPA                   bool `yaml:"hpa"`
+	Event                 bool `yaml:"event"`
+	CoreEvent             bool `yaml:"coreevent"`
 }
 
 // Config struct contains kubewatch configuration
 type Config struct {
 	// Handlers know how to send notifications to specific services.
-	Handler Handler `json:"handler"`
+	Handler Handler `yaml:"handler"`
 
-	//Reason   []string `json:"reason"`
+	//Reason   []string `yaml:"reason"`
 
 	// Resources to watch.
-	Resource Resource `json:"resource"`
+	Resource Resource `yaml:"resource"`
 
 	// For watching specific namespace, leave it empty for watching all.
 	// this config is ignored when watching namespaces
-	Namespace string `json:"namespace,omitempty"`
+	Namespace string `yaml:"namespace,omitempty"`
 
 	// Message properties .
-	Message Message `json:"message"`
+	Message Message `yaml:"message"`
 	// Diff properties .
-	Diff Diff `json:"diff"`
+	Diff Diff `yaml:"diff"`
 }
 
 type Diff struct {
-	Enabled    bool     `json:"enabled"`
-	IgnorePath []string `json:"ignore"`
+	Enabled    bool     `yaml:"enabled"`
+	IgnorePath []string `yaml:"ignore"`
 }
 
 // Message contains message configuration.
 type Message struct {
 	// Message title.
-	Title string `json:"title"`
+	Title string `yaml:"title"`
 }
 
 // Slack contains slack configuration
 type Slack struct {
 	// Slack "legacy" API token.
-	Token string `json:"token"`
+	Token string `yaml:"token"`
 	// Slack channel.
-	Channel string `json:"channel"`
+	Channel string `yaml:"channel"`
 	// Title of the message.
-	//Title string `json:"title"` // moved to Message
+	//Title string `yaml:"title"` // moved to Message
 }
 
 // SlackWebhook contains slack configuration
 type SlackWebhook struct {
 	// Slack channel.
-	Channel string `json:"channel"`
+	Channel string `yaml:"channel"`
 	// Slack Username.
-	Username string `json:"username"`
+	Username string `yaml:"username"`
 	// Slack Emoji.
-	Emoji string `json:"emoji"`
+	Emoji string `yaml:"emoji"`
 	// Slack Webhook Url.
-	Slackwebhookurl string `json:"slackwebhookurl"`
+	Slackwebhookurl string `yaml:"slackwebhookurl"`
 }
 
 // Hipchat contains hipchat configuration
 type Hipchat struct {
 	// Hipchat token.
-	Token string `json:"token"`
+	Token string `yaml:"token"`
 	// Room name.
-	Room string `json:"room"`
+	Room string `yaml:"room"`
 	// URL of the hipchat server.
-	Url string `json:"url"`
+	Url string `yaml:"url"`
 }
 
 // Mattermost contains mattermost configuration
 type Mattermost struct {
-	Channel  string `json:"room"`
-	Url      string `json:"url"`
-	Username string `json:"username"`
+	Channel  string `yaml:"room"`
+	Url      string `yaml:"url"`
+	Username string `yaml:"username"`
 }
 
 // Flock contains flock configuration
 type Flock struct {
 	// URL of the flock API.
-	Url string `json:"url"`
+	Url string `yaml:"url"`
 }
 
 // Webhook contains webhook configuration
 type Webhook struct {
 	// Webhook URL.
-	Url     string `json:"url"`
-	Cert    string `json:"cert"`
-	TlsSkip bool   `json:"tlsskip"`
+	Url     string `yaml:"url"`
+	Cert    string `yaml:"cert"`
+	TlsSkip bool   `yaml:"tlsskip"`
 }
 
 // Lark contains lark configuration
 type Lark struct {
 	// Webhook URL.
-	WebhookURL string `json:"webhookurl"`
+	WebhookURL string `yaml:"webhookurl"`
 }
 
 // CloudEvent contains CloudEvent configuration
 type CloudEvent struct {
-	Url string `json:"url"`
+	Url string `yaml:"url"`
 }
 
 // MSTeams contains MSTeams configuration
 type MSTeams struct {
 	// MSTeams API Webhook URL.
-	WebhookURL string `json:"webhookurl"`
+	WebhookURL string `yaml:"webhookurl"`
 }
 
 // SMTP contains SMTP configuration.
 type SMTP struct {
 	// Destination e-mail address.
-	To string `json:"to" yaml:"to,omitempty"`
+	To string `yaml:"to" yaml:"to,omitempty"`
 	// Sender e-mail address .
-	From string `json:"from" yaml:"from,omitempty"`
+	From string `yaml:"from" yaml:"from,omitempty"`
 	// Smarthost, aka "SMTP server"; address of server used to send email.
-	Smarthost string `json:"smarthost" yaml:"smarthost,omitempty"`
+	Smarthost string `yaml:"smarthost" yaml:"smarthost,omitempty"`
 	// Subject of the outgoing emails.
-	Subject string `json:"subject" yaml:"subject,omitempty"`
+	Subject string `yaml:"subject" yaml:"subject,omitempty"`
 	// Extra e-mail headers to be added to all outgoing messages.
-	Headers map[string]string `json:"headers" yaml:"headers,omitempty"`
+	Headers map[string]string `yaml:"headers" yaml:"headers,omitempty"`
 	// Authentication parameters.
-	Auth SMTPAuth `json:"auth" yaml:"auth,omitempty"`
+	Auth SMTPAuth `yaml:"auth" yaml:"auth,omitempty"`
 	// If "true" forces secure SMTP protocol (AKA StartTLS).
-	RequireTLS bool `json:"requireTLS" yaml:"requireTLS"`
+	RequireTLS bool `yaml:"requireTLS" yaml:"requireTLS"`
 	// SMTP hello field (optional)
-	Hello string `json:"hello" yaml:"hello,omitempty"`
+	Hello string `yaml:"hello" yaml:"hello,omitempty"`
 }
 
 type SMTPAuth struct {
 	// Username for PLAN and LOGIN auth mechanisms.
-	Username string `json:"username" yaml:"username,omitempty"`
+	Username string `yaml:"username" yaml:"username,omitempty"`
 	// Password for PLAIN and LOGIN auth mechanisms.
-	Password string `json:"password" yaml:"password,omitempty"`
+	Password string `yaml:"password" yaml:"password,omitempty"`
 	// Identity for PLAIN auth mechanism
-	Identity string `json:"identity" yaml:"identity,omitempty"`
+	Identity string `yaml:"identity" yaml:"identity,omitempty"`
 	// Secret for CRAM-MD5 auth mechanism
-	Secret string `json:"secret" yaml:"secret,omitempty"`
+	Secret string `yaml:"secret" yaml:"secret,omitempty"`
 }
 
 // New creates new config object
