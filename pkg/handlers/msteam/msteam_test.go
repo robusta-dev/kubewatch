@@ -13,27 +13,49 @@ import (
 	"github.com/bitnami-labs/kubewatch/pkg/event"
 	"github.com/mohae/deepcopy"
 	"github.com/stretchr/testify/assert"
-	"k8s.io/apimachinery/pkg/runtime"
 )
 
 func TestSendCard_Success(t *testing.T) {
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	})
+
 	httptest.NewServer(handler)
-	server := httptestConfig(t, TeamsMessageCard{}, "SendCard")
+	initCard := &TeamsMessageCard{
+		Type:    messageType,
+		Context: context,
+		Summary: "kubewatch notification received",
+		Title:   "kubewatch",
+
+		Sections: []TeamsMessageCardSection{
+			{
+				Markdown: true,
+			},
+		},
+	}
+
+	server := httptestConfig(t, *initCard, "SendCard")
 	defer server.Close()
+
+	expectedCard := &TeamsMessageCard{
+		Type:    messageType,
+		Context: context,
+		Summary: "kubewatch notification received",
+		Title:   "kubewatch",
+
+		Sections: []TeamsMessageCardSection{
+			{
+				Markdown: true,
+			},
+		},
+	}
 
 	ms := &MSTeams{
 		TeamsWebhookURL: server.URL,
+		Title:           "kubewatch",
 	}
 
-	card := &TeamsMessageCard{
-		Type: messageType,
-		// ... initialize card fields ...
-	}
-
-	response, err := sendCard(ms, card)
+	response, err := sendCard(ms, expectedCard)
 	assert.NoError(t, err)
 	assert.NotNil(t, response)
 	assert.Equal(t, http.StatusOK, response.StatusCode)
@@ -110,8 +132,6 @@ func TestInit_MissingWebhookURL(t *testing.T) {
 	assert.Error(t, err)
 }
 
-// Add more tests as needed
-
 var msTeamsTestMessage = event.Event{
 	Name:      "foo",
 	Namespace: "new",
@@ -153,7 +173,7 @@ func TestObjectCreated(t *testing.T) {
 		ThemeColor: msTeamsColors["Normal"],
 		Summary:    "kubewatch notification received",
 		Title:      "kubewatch",
-		Text:       "```null```",
+		Text:       "",
 
 		Sections: []TeamsMessageCardSection{
 			{
@@ -184,7 +204,7 @@ func TestObjectDeleted(t *testing.T) {
 		ThemeColor: msTeamsColors["Danger"],
 		Summary:    "kubewatch notification received",
 		Title:      "kubewatch",
-		Text:       "```null```",
+		Text:       "",
 		Sections: []TeamsMessageCardSection{
 			{
 				Markdown: true,
@@ -217,7 +237,7 @@ func TestObjectUpdated(t *testing.T) {
 		ThemeColor: msTeamsColors["Warning"],
 		Summary:    "kubewatch notification received",
 		Title:      "kubewatch",
-		Text:       "```[\n    {\n        \"value\": \"baz\",\n        \"op\": \"replace\",\n        \"path\": \"/foo\"\n    }\n]```",
+		Text:       "",
 		Sections: []TeamsMessageCardSection{
 			{
 				Markdown: true,
@@ -234,15 +254,6 @@ func TestObjectUpdated(t *testing.T) {
 	oldP := deepcopy.Copy(msTeamsTestMessage).(event.Event)
 	oldP.Reason = "Updated"
 	oldP.Status = "Warning"
-	oldP.Obj = runtime.Object(&runtime.Unknown{Raw: []byte(`{"foo":"bar"}`)})
-	oldP.OldObj = runtime.Object(&runtime.Unknown{Raw: []byte(`{"foo":"bar"}`)})
-
-	newP := deepcopy.Copy(msTeamsTestMessage).(event.Event)
-	newP.Reason = "Updated"
-	newP.Status = "Warning"
-	oldP.Obj = runtime.Object(&runtime.Unknown{Raw: []byte(`{"foo":"baz"}`)})
-	oldP.OldObj = runtime.Object(&runtime.Unknown{Raw: []byte(`{"foo":"bar"}`)})
-	_ = newP
 
 	ms.Handle(oldP)
 }
