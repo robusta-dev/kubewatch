@@ -42,9 +42,9 @@ Command line flags will override environment variables
 
 `
 var dcColors = map[string]int{
-	"Normal":  0,
-	"Warning": 0,
-	"Danger":  0,
+	"Normal":  8311585,
+	"Warning": 16312092,
+	"Danger":  13632027,
 }
 
 type Discord struct {
@@ -57,9 +57,8 @@ type DiscordMsg struct {
 }
 
 type DiscordEmbed struct {
-	Color       int    `json:"color"`
-	Type        string `json:"type"`
-	Description string `json:"description"`
+	Color int    `json:"color"`
+	Title string `json:"title"`
 }
 
 var _ handlers.Handler = &Discord{}
@@ -80,9 +79,17 @@ func (dc *Discord) Init(c *config.Config) error {
 }
 
 func (dc *Discord) Handle(e event.Event) {
-	discordMsg := prepareWebhookMessage(e)
+	msg := &DiscordMsg{
+		Content: "kubewatch notification received",
+	}
 
-	_, err := dc.sendMessage(discordMsg)
+	var embed DiscordEmbed
+	embed.Color = dcColors[e.Status]
+	embed.Title = e.Message()
+
+	msg.Embeds = append(msg.Embeds, embed)
+
+	_, err := sendMessage(dc, msg)
 	if err != nil {
 		logrus.Printf("%s\n", err)
 		return
@@ -91,13 +98,9 @@ func (dc *Discord) Handle(e event.Event) {
 	logrus.Printf("Message successfully sent to Discord")
 }
 
-func prepareWebhookMessage(e event.Event) *DiscordMsg {
-	return &DiscordMsg{}
-}
-
-func (dc *Discord) sendMessage(discordMsg *DiscordMsg) (*http.Response, error) {
+func sendMessage(dc *Discord, discordMsg *DiscordMsg) (*http.Response, error) {
 	buffer := new(bytes.Buffer)
-	if err := json.NewEncoder(buffer).Encode(""); err != nil {
+	if err := json.NewEncoder(buffer).Encode(discordMsg); err != nil {
 		return nil, fmt.Errorf("Failed encoding message: %v", err)
 	}
 
