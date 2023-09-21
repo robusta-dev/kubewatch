@@ -52,8 +52,7 @@ type Discord struct {
 }
 
 type DiscordMsg struct {
-	Content string         `json:"content"`
-	Embeds  []DiscordEmbed `json:"embeds"`
+	Embeds []DiscordEmbed `json:"embeds"`
 }
 
 type DiscordEmbed struct {
@@ -79,9 +78,7 @@ func (dc *Discord) Init(c *config.Config) error {
 }
 
 func (dc *Discord) Handle(e event.Event) {
-	msg := &DiscordMsg{
-		Content: "kubewatch notification received",
-	}
+	msg := &DiscordMsg{}
 
 	var embed DiscordEmbed
 	embed.Color = dcColors[e.Status]

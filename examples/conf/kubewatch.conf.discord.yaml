@@ -1,0 +1,23 @@
+### why add query wait=true?
+## follow docs: https://discord.com/developers/docs/resources/webhook#execute-webhook
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kubewatch
+data:
+  .kubewatch.yaml: |
+    namespace:
+    handler:
+      discord:
+        webhookurl: "<url>?wait=true"
+    resource:
+      namespace: false
+      deployment: false
+      replicationcontroller: false
+      replicaset: false
+      daemonset: false
+      services: false
+      pod: true
+      secret: false
+      configmap: false

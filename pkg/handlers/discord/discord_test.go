@@ -35,7 +35,6 @@ func TestInit(t *testing.T) {
 
 func TestObjectCreated(t *testing.T) {
 	expectedDiscordMsg := DiscordMsg{
-		Content: "kubewatch notification received",
 		Embeds: []DiscordEmbed{
 			{
 				Color: dcColors["Normal"],
@@ -74,7 +73,6 @@ func TestObjectCreated(t *testing.T) {
 // Tests ObjectDeleted() by passing v1.Pod
 func TestObjectDeleted(t *testing.T) {
 	expectedDiscordMsg := DiscordMsg{
-		Content: "kubewatch notification received",
 		Embeds: []DiscordEmbed{
 			{
 				Color: dcColors["Danger"],
@@ -114,7 +112,6 @@ func TestObjectDeleted(t *testing.T) {
 // Tests ObjectUpdated() by passing v1.Pod
 func TestObjectUpdated(t *testing.T) {
 	expectedDiscordMsg := DiscordMsg{
-		Content: "kubewatch notification received",
 		Embeds: []DiscordEmbed{
 			{
 				Color: dcColors["Warning"],
