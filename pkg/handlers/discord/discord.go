@@ -20,7 +20,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"os"
 
@@ -107,7 +107,7 @@ func sendMessage(dc *Discord, discordMsg *DiscordMsg) (*http.Response, error) {
 	}
 
 	if res.StatusCode != http.StatusOK {
-		resMessage, err := ioutil.ReadAll(res.Body)
+		resMessage, err := io.ReadAll(res.Body)
 		if err != nil {
 			return nil, fmt.Errorf("Failed reading Discord http response: %v", err)
 		}

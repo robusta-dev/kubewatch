@@ -1,7 +1,6 @@
 package main
 
 import (
-	"io/ioutil"
 	"os"
 	"testing"
 )
@@ -25,7 +24,7 @@ type Bar struct {
 }
 
 func TestMain(t *testing.T) {
-	tmp, err := ioutil.TempFile("", "")
+	tmp, err := os.CreateTemp("", "")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -55,7 +54,7 @@ rebar:
   baz: 0
 quz: {}
 `
-	b, err := ioutil.ReadFile(tmp.Name())
+	b, err := os.ReadFile(tmp.Name())
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -66,7 +65,7 @@ quz: {}
 }
 
 func TestGo(t *testing.T) {
-	tmp, err := ioutil.TempFile("", "")
+	tmp, err := os.CreateTemp("", "")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -90,7 +89,7 @@ var yannotated = ` + "`" + `# Baz is baz.
 baz: 0
 ` + "`\n"
 
-	b, err := ioutil.ReadFile(tmp.Name())
+	b, err := os.ReadFile(tmp.Name())
 	if err != nil {
 		t.Fatal(err)
 	}
