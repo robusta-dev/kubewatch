@@ -9,8 +9,8 @@ Kubewatch is a Kubernetes watcher that currently publishes notification to Slack
 ## TL;DR
 
 ```console
-$ helm repo add bitnami https://charts.bitnami.com/bitnami
-$ helm install my-release bitnami/kubewatch
+$ helm repo add robusta https://robusta-charts.storage.googleapis.com && helm repo update
+$ helm install my-release robusta/kubewatch
 ```
 
 ## Introduction
