@@ -19,7 +19,7 @@ limitations under the License.
 package config
 
 import (
-	"io/ioutil"
+	"io"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -47,6 +47,7 @@ type Handler struct {
 	MSTeams      MSTeams      `json:"msteams"`
 	SMTP         SMTP         `json:"smtp"`
 	Lark         Lark         `json:"lark"`
+	Discord      Discord      `json:"discord"`
 }
 
 // Resource contains resource configuration
@@ -189,6 +190,10 @@ type SMTPAuth struct {
 	Secret string `json:"secret" yaml:"secret,omitempty"`
 }
 
+type Discord struct {
+	WebhookURL string `json:"webhookurl"`
+}
+
 // New creates new config object
 func New() (*Config, error) {
 	c := &Config{}
@@ -229,7 +234,7 @@ func (c *Config) Load() error {
 		return err
 	}
 
-	b, err := ioutil.ReadAll(file)
+	b, err := io.ReadAll(file)
 	if err != nil {
 		return err
 	}

@@ -20,9 +20,9 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"fmt"
-	"github.com/sirupsen/logrus"
-	"io/ioutil"
 	"os"
+
+	"github.com/sirupsen/logrus"
 
 	"bytes"
 	"encoding/json"
@@ -88,7 +88,7 @@ func (m *Webhook) Init(c *config.Config) error {
 		if cert == "" {
 			logrus.Printf("No webhook cert is given")
 		} else {
-			caCert, err := ioutil.ReadFile(cert)
+			caCert, err := os.ReadFile(cert)
 			if err != nil {
 				logrus.Printf("%s\n", err)
 				return err

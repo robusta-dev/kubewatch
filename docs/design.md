@@ -38,6 +38,7 @@ With each event get from k8s and matched filtering from configuration, it is pas
  - `Slack`: which send notification to Slack channel based on information from config
  - `Smtp`: which sends notifications to email recipients using a SMTP server obtained from config
  - `Lark`: which sends notifications to Lark incoming webhook based on information from config
+ - `Discord`: which sends notifications to Discord channel based on information from config
 
 More handlers will be added in future.
 
