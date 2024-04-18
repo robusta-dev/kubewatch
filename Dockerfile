@@ -14,6 +14,8 @@ RUN cd "$GOPATH/src/github.com/bitnami-labs/kubewatch" && \
 
 FROM cgr.dev/chainguard/static:latest-glibc
 
+COPY --from=busybox:1.35.0-uclibc /bin/sh /bin/ls /bin/cat /bin/ps /bin/
+
 COPY --from=builder /kubewatch /bin/kubewatch
 
 ENV KW_CONFIG=/opt/bitnami/kubewatch
