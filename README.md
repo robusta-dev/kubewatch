@@ -94,6 +94,10 @@ resourcesToWatch:
   ingress: false
   coreevent: false
   event: true
+customresources:
+  - group: monitoring.coreos.com
+    version: v1
+    resource: prometheusrules
 slack:
   channel: '#YOUR_CHANNEL'
   token: 'xoxb-YOUR_TOKEN'
@@ -129,7 +133,7 @@ Once the Pod is running, you will start seeing Kubernetes events in your configu
 
 ![slack](./docs/slack.png)
 
-To modify what notifications you get, update the `kubewatch` ConfigMap and turn on and off (true/false) resources:
+To modify what notifications you get, update the `kubewatch` ConfigMap and turn on and off (true/false) resources or configure any resource of your choosing with customresources (CRDs):
 
 ```
 resource:
@@ -151,6 +155,10 @@ resource:
   ingress: false
   coreevent: false
   event: true
+customresources:
+  - group: monitoring.coreos.com
+    version: v1
+    resource: prometheusrules
 ```
 
 #### Working with RBAC
