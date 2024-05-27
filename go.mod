@@ -19,7 +19,8 @@ require (
 	github.com/spf13/jwalterweatherman v0.0.0-20180109140146-7c0cea34c8ec // indirect
 	github.com/spf13/viper v1.0.0
 	github.com/tbruyelle/hipchat-go v0.0.0-20160921153256-749fb9e14beb
-	golang.org/x/crypto v0.17.0 // indirect
+	golang.org/x/net v0.23.0 // indirect
+	google.golang.org/protobuf v1.33.0 // indirect
 	gopkg.in/check.v1 v1.0.0-20200227125254-8fa46927fb4f // indirect
 	gopkg.in/yaml.v2 v2.3.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1
