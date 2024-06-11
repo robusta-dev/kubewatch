@@ -51,18 +51,18 @@ extraDeploy: []
 
 ## @section Kubewatch parameters
 
-## Bitnami Kubewatch image version
-## ref: https://hub.docker.com/r/bitnami/kubewatch/tags/
-## @param image.registry Kubewatch image registry
+## Robusta Kubewatch image versions
+## ref: https://hub.docker.com/r/robustadev/kubewatch/tags
+## Bitnami Kubewatch image versions (depricated)
+## ref: https://hub.docker.com/r/bitnami/kubewatch-archived/tags
 ## @param image.repository Kubewatch image repository
 ## @param image.tag Kubewatch image tag (immutable tags are recommended)
 ## @param image.pullPolicy Kubewatch image pull policy
 ## @param image.pullSecrets Specify docker-registry secret names as an array
 ##
 image:
-  registry: us-central1-docker.pkg.dev
-  repository: genuine-flight-317411/devel/kubewatch
-  tag: v2.4
+  repository: robustadev/kubewatch
+  tag: v2.6
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
   ## ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images

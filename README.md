@@ -18,7 +18,7 @@
 # Latest image
 
 ```
-us-central1-docker.pkg.dev/genuine-flight-317411/devel/kubewatch:v2.5
+robustadev/kubewatch:v2.6
 ```
 
 # Usage
@@ -210,13 +210,13 @@ INFO[0000] Kubewatch controller synced and ready         pkg=kubewatch-pod
 To Run Kubewatch Container interactively, place the config file in `$HOME/.kubewatch.yaml` location and use the following command.
 
 ```
-docker run --rm -it --network host -v $HOME/.kubewatch.yaml:/root/.kubewatch.yaml -v $HOME/.kube/config:/opt/bitnami/kubewatch/.kube/config --name <container-name> us-central1-docker.pkg.dev/genuine-flight-317411/devel/kubewatch
+docker run --rm -it --network host -v $HOME/.kubewatch.yaml:/root/.kubewatch.yaml -v $HOME/.kube/config:/opt/bitnami/kubewatch/.kube/config --name <container-name> robustadev/kubewatch
 ```
 
 Example:
 
 ```
-$ docker run --rm -it --network host -v $HOME/.kubewatch.yaml:/root/.kubewatch.yaml -v $HOME/.kube/config:/opt/bitnami/kubewatch/.kube/config --name kubewatch-app us-central1-docker.pkg.dev/genuine-flight-317411/devel/kubewatch
+$ docker run --rm -it --network host -v $HOME/.kubewatch.yaml:/root/.kubewatch.yaml -v $HOME/.kube/config:/opt/bitnami/kubewatch/.kube/config --name kubewatch-app robustadev/kubewatch
 
 ==> Writing config file...
 INFO[0000] Starting kubewatch controller                 pkg=kubewatch-service
@@ -233,7 +233,7 @@ INFO[0000] Processing add to namespace: default          pkg=kubewatch-namespace
 To Demonise Kubewatch container use
 
 ```
-$ docker run --rm -d --network host -v $HOME/.kubewatch.yaml:/root/.kubewatch.yaml -v $HOME/.kube/config:/opt/bitnami/kubewatch/.kube/config --name kubewatch-app us-central1-docker.pkg.dev/genuine-flight-317411/devel/kubewatch
+$ docker run --rm -d --network host -v $HOME/.kubewatch.yaml:/root/.kubewatch.yaml -v $HOME/.kube/config:/opt/bitnami/kubewatch/.kube/config --name kubewatch-app robustadev/kubewatch
 ```
 
 # Configure
