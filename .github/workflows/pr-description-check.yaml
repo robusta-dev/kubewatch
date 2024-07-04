@@ -1,0 +1,34 @@
+name: Check PR Description contains tests performed
+
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+
+jobs:
+  check-pr-description:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out the code
+      uses: actions/checkout@v2
+
+    - name: Validate PR description
+      id: validate
+      run: |
+        if [[ ! "${{ github.event.pull_request.body }}" =~ "## Tests performed" ]]; then
+          echo "PR description does not contain the section 'Tests performed'."
+          exit 1
+        fi
+
+        # Extract the "Tests performed" section
+        tests_performed_section=$(sed -n '/## Tests performed/,/##/p' <<< "${{ github.event.pull_request.body }}")
+
+        # Check if there is at least one test description in the "Tests performed" section
+        if [[ ! "$tests_performed_section" =~ "- " ]]; then
+          echo "The 'Tests performed' section does not contain a list of tests."
+          exit 1
+        fi
+
+    - name: Success message
+      if: success()
+      run: echo "PR description contains the 'Tests performed' section with a list of tests."
