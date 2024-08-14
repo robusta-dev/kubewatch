@@ -556,14 +556,14 @@ func Start(conf *config.Config, eventHandler handlers.Handler) {
 						Group:    crd.Group,
 						Version:  crd.Version,
 						Resource: crd.Resource,
-					}).List(options)
+					}).List(context.Background(), options)
 				},
 				WatchFunc: func(options meta_v1.ListOptions) (watch.Interface, error) {
 					return dynamicClient.Resource(schema.GroupVersionResource{
 						Group:    crd.Group,
 						Version:  crd.Version,
 						Resource: crd.Resource,
-					}).Watch(options)
+					}).Watch(context.Background(), options)
 				},
 			},
 			&unstructured.Unstructured{},

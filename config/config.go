@@ -19,7 +19,6 @@ limitations under the License.
 package config
 
 import (
-	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
