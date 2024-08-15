@@ -75,6 +75,10 @@ You may also provide a values file instead:
 ```yaml
 rbac:
   create: true
+  customRules:
+    - apiGroups: ["monitoring.coreos.com"]
+      resources: ["prometheusrules"]
+      verbs: ["get", "list", "watch"]
 resourcesToWatch:
   deployment: false
   replicationcontroller: false
