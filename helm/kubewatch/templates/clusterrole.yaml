@@ -76,7 +76,7 @@ rules:
       - get
       - list
       - watch
-  {{- range .Values.rbac.customRules }}
+  {{- range .Values.rbac.customRoles }}
   - apiGroups: {{ toYaml .apiGroups | nindent 4 }}
     resources: {{ toYaml .resources | nindent 4 }}
     verbs: {{ toYaml .verbs | nindent 4 }}

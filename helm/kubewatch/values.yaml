@@ -214,6 +214,15 @@ resourcesToWatch:
   job: false
   persistentvolume: false
   event: true
+
+## @param customresources Define custom resources to watch for changes
+## Example:
+## customresources:
+##   - group: monitoring.coreos.com
+##     version: v1
+##     resource: prometheusrules
+##
+customresources: []
 ## @param command Override default container command (useful when using custom images)
 ##
 command: []
@@ -439,11 +448,18 @@ initContainers: []
 sidecars: []
 
 ## @section RBAC parameters
-
-## @param rbac.create Whether to create & use RBAC resources or not
 ##
 rbac:
+## @param rbac.create Whether to create & use RBAC resources or not
   create: false
+## @param rbac.customRoles custom RBAC rules to be applied
+## Example:
+## customRoles:
+##   - apiGroups: ["monitoring.coreos.com"]
+##     resources: ["prometheusrules"]
+##     verbs: ["get", "list", "watch"]
+## 
+  customRoles: []
 ## Pods Service Account
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
 ## @param serviceAccount.create Specifies whether a ServiceAccount should be created

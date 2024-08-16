@@ -47,4 +47,5 @@ data:
       lark: {{- toYaml .Values.lark | nindent 8 }}
       {{- end }}
     resource: {{- toYaml .Values.resourcesToWatch | nindent 6 }}
+    customresources: {{- toYaml .Values.customresources | nindent 6 }}
     namespace: {{ .Values.namespaceToWatch | quote }}
