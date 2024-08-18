@@ -1,0 +1,4 @@
+customresources:
+  - group: monitoring.coreos.com
+    version: v1
+    resource: prometheusrules

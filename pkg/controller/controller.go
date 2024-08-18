@@ -19,6 +19,8 @@ package controller
 import (
 	"context"
 	"fmt"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+	"k8s.io/apimachinery/pkg/runtime/schema"
 	"os"
 	"os/signal"
 	"reflect"
@@ -44,6 +46,7 @@ import (
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/apimachinery/pkg/watch"
+	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/cache"
@@ -89,11 +92,14 @@ func objName(obj interface{}) string {
 // Start prepares watchers and run their controllers, then waits for process termination signals
 func Start(conf *config.Config, eventHandler handlers.Handler) {
 	var kubeClient kubernetes.Interface
+	var dynamicClient dynamic.Interface
 
 	if _, err := rest.InClusterConfig(); err != nil {
 		kubeClient = utils.GetClientOutOfCluster()
+		dynamicClient = utils.GetDynamicClientOutOfCluster()
 	} else {
 		kubeClient = utils.GetClient()
+		dynamicClient = utils.GetDynamicClient()
 	}
 
 	// User Configured Events
@@ -536,6 +542,36 @@ func Start(conf *config.Config, eventHandler handlers.Handler) {
 		)
 
 		c := newResourceController(kubeClient, eventHandler, informer, objName(networking_v1.Ingress{}), NETWORKING_V1)
+		stopCh := make(chan struct{})
+		defer close(stopCh)
+
+		go c.Run(stopCh)
+	}
+
+	for _, crd := range conf.CustomResources {
+		informer := cache.NewSharedIndexInformer(
+			&cache.ListWatch{
+				ListFunc: func(options meta_v1.ListOptions) (runtime.Object, error) {
+					return dynamicClient.Resource(schema.GroupVersionResource{
+						Group:    crd.Group,
+						Version:  crd.Version,
+						Resource: crd.Resource,
+					}).List(context.Background(), options)
+				},
+				WatchFunc: func(options meta_v1.ListOptions) (watch.Interface, error) {
+					return dynamicClient.Resource(schema.GroupVersionResource{
+						Group:    crd.Group,
+						Version:  crd.Version,
+						Resource: crd.Resource,
+					}).Watch(context.Background(), options)
+				},
+			},
+			&unstructured.Unstructured{},
+			0, //Skip resync
+			cache.Indexers{},
+		)
+
+		c := newResourceController(kubeClient, eventHandler, informer, crd.Resource, fmt.Sprintf("%s/%s", crd.Group, crd.Version))
 		stopCh := make(chan struct{})
 		defer close(stopCh)
 

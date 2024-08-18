@@ -73,7 +73,12 @@ type Resource struct {
 	CoreEvent             bool `json:"coreevent"`
 }
 
-// Config struct contains kubewatch configuration
+type CRD struct {
+	Group    string `json:"group"`
+	Version  string `json:"version"`
+	Resource string `json:"resource"`
+}
+
 type Config struct {
 	// Handlers know how to send notifications to specific services.
 	Handler Handler `json:"handler"`
@@ -82,6 +87,9 @@ type Config struct {
 
 	// Resources to watch.
 	Resource Resource `json:"resource"`
+
+	// CustomResources to Watch
+	CustomResources []CRD `json:"customresources"`
 
 	// For watching specific namespace, leave it empty for watching all.
 	// this config is ignored when watching namespaces
