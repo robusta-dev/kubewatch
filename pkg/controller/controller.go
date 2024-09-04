@@ -548,7 +548,8 @@ func Start(conf *config.Config, eventHandler handlers.Handler) {
 		go c.Run(stopCh)
 	}
 
-	for _, crd := range conf.CustomResources {
+	for _, curRes := range conf.CustomResources {
+		crd := curRes
 		informer := cache.NewSharedIndexInformer(
 			&cache.ListWatch{
 				ListFunc: func(options meta_v1.ListOptions) (runtime.Object, error) {
