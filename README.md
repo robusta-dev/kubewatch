@@ -236,6 +236,11 @@ Alternatively, you can pass this configuration directly using the `--set` flag:
 helm install kubewatch robusta/kubewatch --set='rbac.create=true,slack.channel=#YOUR_CHANNEL,slack.token=xoxb-YOUR_TOKEN,customRoles[0].apiGroups={monitoring.coreos.com},customRoles[0].resources={prometheusrules},customRoles[0].verbs={get,list,watch}'
 ```
 
+#### Metrics
+`kubewatch` runs a Prometheus metrics endpoint at `/metrics` on port `2112` that can be used to monitor health and the performance of `kubewatch`. 
+
+The `kubewatch_events_total` metric can help track the total number of Kubernetes events, categorized by resource type (e.g., `Pods`, `Deployments`) and event type (e.g., `Create`, `Delete`).
+
 ### Local Installation
 #### Using go package installer:
 
