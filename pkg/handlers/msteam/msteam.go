@@ -21,7 +21,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/sirupsen/logrus"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"os"
 
@@ -98,7 +98,7 @@ func sendCard(ms *MSTeams, card *TeamsMessageCard) (*http.Response, error) {
 			ms.TeamsWebhookURL, err)
 	}
 	if res.StatusCode != http.StatusOK {
-		resMessage, err := ioutil.ReadAll(res.Body)
+		resMessage, err := io.ReadAll(res.Body)
 		if err != nil {
 			return nil, fmt.Errorf("Failed reading Teams http response: %v", err)
 		}

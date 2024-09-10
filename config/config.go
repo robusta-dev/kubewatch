@@ -19,7 +19,7 @@ limitations under the License.
 package config
 
 import (
-	"io/ioutil"
+	"io"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -237,7 +237,7 @@ func (c *Config) Load() error {
 		return err
 	}
 
-	b, err := ioutil.ReadAll(file)
+	b, err := io.ReadAll(file)
 	if err != nil {
 		return err
 	}
