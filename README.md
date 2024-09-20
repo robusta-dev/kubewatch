@@ -242,11 +242,13 @@ helm install kubewatch robusta/kubewatch --set='rbac.create=true,slack.channel=#
 The `kubewatch_events_total` metric can help track the total number of Kubernetes events, categorized by resource type (e.g., `Pods`, `Deployments`) and event type (e.g., `Create`, `Delete`).
 
 You can change the default port (`2112`) on which the metrics server listens by setting the `LISTEN_ADDRESS` environment variable. 
+Format is `host:port`. `:5454` means any host, and port `5454`
+
 
 ```yaml
 extraEnvVars:
   - name: LISTEN_ADDRESS
-    value: ":9090"
+    value: ":5454"
 ```
 
 ### Local Installation
