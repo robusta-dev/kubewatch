@@ -243,6 +243,12 @@ The `kubewatch_events_total` metric can help track the total number of Kubernete
 
 You can change the default port (`2112`) on which the metrics server listens by setting the `LISTEN_ADDRESS` environment variable. 
 
+```yaml
+extraEnvVars:
+  - name: LISTEN_ADDRESS
+    value: ":9090"
+```
+
 ### Local Installation
 #### Using go package installer:
 
