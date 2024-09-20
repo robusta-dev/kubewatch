@@ -237,9 +237,11 @@ helm install kubewatch robusta/kubewatch --set='rbac.create=true,slack.channel=#
 ```
 
 #### Metrics
-`kubewatch` runs a Prometheus metrics endpoint at `/metrics` on port `2112` that can be used to monitor health and the performance of `kubewatch`. 
+`kubewatch` runs a Prometheus metrics endpoint at `/metrics` on port `2112` by default. This endpoint can be used to monitor health and the performance of `kubewatch`. 
 
 The `kubewatch_events_total` metric can help track the total number of Kubernetes events, categorized by resource type (e.g., `Pods`, `Deployments`) and event type (e.g., `Create`, `Delete`).
+
+You can change the default port (`2112`) on which the metrics server listens by setting the `LISTEN_ADDRESS` environment variable. 
 
 ### Local Installation
 #### Using go package installer:
