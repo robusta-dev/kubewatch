@@ -84,6 +84,10 @@ The command removes all the Kubernetes components associated with the chart and 
 | `hipchat.room`                           | HipChat room to notify                                                           | `""`                   |
 | `hipchat.token`                          | HipChat token                                                                    | `""`                   |
 | `hipchat.url`                            | HipChat URL                                                                      | `""`                   |
+| `webex.enabled`                          | Enable Webex notifications                                                       | `false`                |
+| `webex.room`                             | Webex room to notify                                                             | `""`                   |
+| `webex.token`                            | Webex token                                                                      | `""`                   |
+| `webex.url`                              | Webex URL                                                                        | `""`                   |
 | `mattermost.enabled`                     | Enable Mattermost notifications                                                  | `false`                |
 | `mattermost.channel`                     | Mattermost channel to notify                                                     | `""`                   |
 | `mattermost.url`                         | Mattermost URL                                                                   | `""`                   |
