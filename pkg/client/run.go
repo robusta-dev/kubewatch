@@ -17,9 +17,9 @@ limitations under the License.
 package client
 
 import (
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"net/http"
 	"os"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
 
 	"github.com/bitnami-labs/kubewatch/config"
 	"github.com/bitnami-labs/kubewatch/pkg/controller"
@@ -33,8 +33,8 @@ import (
 	"github.com/bitnami-labs/kubewatch/pkg/handlers/slack"
 	"github.com/bitnami-labs/kubewatch/pkg/handlers/slackwebhook"
 	"github.com/bitnami-labs/kubewatch/pkg/handlers/smtp"
-	"github.com/bitnami-labs/kubewatch/pkg/handlers/webhook"
 	"github.com/bitnami-labs/kubewatch/pkg/handlers/webex"
+	"github.com/bitnami-labs/kubewatch/pkg/handlers/webhook"
 	"github.com/sirupsen/logrus"
 )
 

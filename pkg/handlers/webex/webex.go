@@ -11,7 +11,6 @@ import (
 	"github.com/bitnami-labs/kubewatch/pkg/event"
 )
 
-
 var webexErrMsg = `
 %s
 
@@ -61,8 +60,8 @@ func (s *Webex) Init(c *config.Config) error {
 
 // Handle handles the notification.
 func (s *Webex) Handle(e event.Event) {
-    client := webex.NewClient()
-    client.SetAuthToken(s.Token)
+	client := webex.NewClient()
+	client.SetAuthToken(s.Token)
 	message := &webex.MessageCreateRequest{
 		RoomID: s.Room,
 		Text:   e.Message(),
@@ -84,4 +83,3 @@ func checkMissingWebexVars(s *Webex) error {
 
 	return nil
 }
-

@@ -27,8 +27,8 @@ import (
 	"github.com/bitnami-labs/kubewatch/pkg/handlers/slack"
 	"github.com/bitnami-labs/kubewatch/pkg/handlers/slackwebhook"
 	"github.com/bitnami-labs/kubewatch/pkg/handlers/smtp"
+	"github.com/bitnami-labs/kubewatch/pkg/handlers/webex"
 	"github.com/bitnami-labs/kubewatch/pkg/handlers/webhook"
-    "github.com/bitnami-labs/kubewatch/pkg/handlers/webex"
 )
 
 // Handler is implemented by any handler.
