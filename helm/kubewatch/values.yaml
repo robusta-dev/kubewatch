@@ -62,7 +62,7 @@ extraDeploy: []
 ##
 image:
   repository: robustadev/kubewatch
-  tag: v2.8.0
+  tag: v2.9.0
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
   ## ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images

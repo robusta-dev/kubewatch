@@ -18,7 +18,7 @@
 # Latest image
 
 ```
-robustadev/kubewatch:v2.8.0
+robustadev/kubewatch:v2.9.0
 ```
 
 # Usage
