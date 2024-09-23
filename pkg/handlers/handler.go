@@ -28,6 +28,7 @@ import (
 	"github.com/bitnami-labs/kubewatch/pkg/handlers/slackwebhook"
 	"github.com/bitnami-labs/kubewatch/pkg/handlers/smtp"
 	"github.com/bitnami-labs/kubewatch/pkg/handlers/webhook"
+    "github.com/bitnami-labs/kubewatch/pkg/handlers/webex"
 )
 
 // Handler is implemented by any handler.
@@ -49,6 +50,7 @@ var Map = map[string]interface{}{
 	"ms-teams":     &msteam.MSTeams{},
 	"smtp":         &smtp.SMTP{},
 	"lark":         &lark.Webhook{},
+	"webex":        &webex.Webex{},
 }
 
 // Default handler implements Handler interface,
