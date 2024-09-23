@@ -16,6 +16,13 @@ handler:
     room: ""
     # URL of the hipchat server.
     url: ""
+  webex:
+    # Webex token.
+    token: ""
+    # Room name.
+    room: ""
+    # URL of the webex server.
+    url: ""
   mattermost:
     room: ""
     url: ""

@@ -31,6 +31,9 @@ data:
       {{- if .Values.webhook.enabled }}
       webhook: {{- toYaml .Values.webhook | nindent 8 }}
       {{- end }}
+      {{- if .Values.webex.enabled }}
+      webex: {{- toYaml .Values.webex | nindent 8 }}
+      {{- end }}
       {{- if .Values.cloudevent.enabled }}
       cloudevent: {{- toYaml .Values.cloudevent | nindent 8 }}
       {{- end }}
