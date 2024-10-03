@@ -4,6 +4,7 @@ go 1.14
 
 require (
 	github.com/fatih/structtag v1.2.0
+	github.com/google/go-cmp v0.6.0
 	github.com/google/go-querystring v0.0.0-20170111101155-53e6ce116135 // indirect
 	github.com/hashicorp/hcl v0.0.0-20171017181929-23c074d0eceb // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
