@@ -5,10 +5,10 @@ on:
     types: [published]
   pull_request:
     types: [opened, synchronize, reopened]
-    
+
 jobs:
   setup-build-publish-deploy:
-    if: github.event_name == 'release' || (github.event_name == 'pull_request' && contains(github.ref_name, '-alpha'))
+    if: github.event_name == 'release' || (github.event_name == 'pull_request' && contains(github.head_ref, '-alpha'))
     name: Build images
     runs-on: ubuntu-latest
 
