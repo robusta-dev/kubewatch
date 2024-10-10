@@ -5,10 +5,7 @@ on:
     types: [published]
   pull_request:
     types: [opened, synchronize, reopened]
-
-env:
-  PROJECT_ID: ${{ secrets.GKE_PROD_PROJECT }}
-
+    
 jobs:
   setup-build-publish-deploy:
     if: github.event_name == 'release' || (github.event_name == 'pull_request' && contains(github.ref_name, '-alpha'))
