@@ -3,14 +3,10 @@ name: Release Robusta
 on:
   release:
     types: [published]
-  pull_request:
-    types: [opened, synchronize, reopened]
-
 env:
-  RELEASE_VER : "git-test-image" #${{ github.event.release.tag_name }}
+  RELEASE_VER : ${{ github.event.release.tag_name }}
 jobs:
   setup-build-publish-deploy:
-    if: github.event_name == 'release' || (github.event_name == 'pull_request')
     name: Build images
     runs-on: ubuntu-latest
 
@@ -59,8 +55,6 @@ jobs:
         push: true
         tags: robustadev/kubewatch:${{ env.RELEASE_VER }}
 
-    # Upload helm chart only on release, not on pull request
     - name: Upload helm chart
-      if: github.event_name == 'release'
       run: |
         cd helm && ./upload_chart.sh
