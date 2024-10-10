@@ -3,12 +3,15 @@ name: Release Robusta
 on:
   release:
     types: [published]
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 env:
   PROJECT_ID: ${{ secrets.GKE_PROD_PROJECT }}
-jobs:
 
+jobs:
   setup-build-publish-deploy:
+    if: github.event_name == 'release' || (github.event_name == 'pull_request' && contains(github.ref_name, '-alpha'))
     name: Build images
     runs-on: ubuntu-latest
 
@@ -57,7 +60,8 @@ jobs:
         push: true
         tags: robustadev/kubewatch:${{ github.ref_name }}
 
+    # Upload helm chart only on release, not on pull request
     - name: Upload helm chart
+      if: github.event_name == 'release'
       run: |
         cd helm && ./upload_chart.sh
-
