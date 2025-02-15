@@ -12,7 +12,7 @@ ADD . "$GOPATH/src/github.com/bitnami-labs/kubewatch"
 RUN cd "$GOPATH/src/github.com/bitnami-labs/kubewatch" && \
     CGO_ENABLED=0 GOOS=linux GOARCH=$(dpkg --print-architecture) go build -a --installsuffix cgo --ldflags="-s" -o /kubewatch
 
-FROM cgr.dev/chainguard/static:latest-glibc
+FROM cgr.dev/chainguard/bash:latest
 
 COPY --from=builder /kubewatch /bin/kubewatch
 

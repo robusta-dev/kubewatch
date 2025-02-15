@@ -5,6 +5,8 @@ go 1.21
 require (
 	github.com/fatih/structtag v1.2.0
 	github.com/mkmik/multierror v0.3.0
+	github.com/pelletier/go-toml v1.0.1 // indirect
+	github.com/prometheus/client_golang v1.20.3
 	github.com/segmentio/textio v1.2.0
 	github.com/sirupsen/logrus v1.6.0
 	github.com/slack-go/slack v0.6.5

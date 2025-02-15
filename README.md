@@ -18,7 +18,7 @@
 # Latest image
 
 ```
-us-central1-docker.pkg.dev/genuine-flight-317411/devel/kubewatch:v2.5
+robustadev/kubewatch:v2.9.0
 ```
 
 # Usage
@@ -75,6 +75,10 @@ You may also provide a values file instead:
 ```yaml
 rbac:
   create: true
+  customRoles:
+    - apiGroups: ["monitoring.coreos.com"]
+      resources: ["prometheusrules"]
+      verbs: ["get", "list", "watch"]
 resourcesToWatch:
   deployment: false
   replicationcontroller: false
@@ -94,6 +98,10 @@ resourcesToWatch:
   ingress: false
   coreevent: false
   event: true
+customresources:
+  - group: monitoring.coreos.com
+    version: v1
+    resource: prometheusrules
 slack:
   channel: '#YOUR_CHANNEL'
   token: 'xoxb-YOUR_TOKEN'
@@ -129,7 +137,7 @@ Once the Pod is running, you will start seeing Kubernetes events in your configu
 
 ![slack](./docs/slack.png)
 
-To modify what notifications you get, update the `kubewatch` ConfigMap and turn on and off (true/false) resources:
+To modify what notifications you get, update the `kubewatch` ConfigMap and turn on and off (true/false) resources or configure any resource of your choosing with customresources (CRDs):
 
 ```
 resource:
@@ -151,6 +159,10 @@ resource:
   ingress: false
   coreevent: false
   event: true
+customresources:
+  - group: monitoring.coreos.com
+    version: v1
+    resource: prometheusrules
 ```
 
 #### Working with RBAC
@@ -177,6 +189,66 @@ Then just create `pod` as usual with:
 
 ```console
 $ kubectl create -f kubewatch.yaml
+```
+
+#### Working with CRDs
+`kubewatch` can be configured to monitor Kubernetes Custom Resource Definitions (CRDs), allowing you to receive notifications when changes occur.
+To configure kubewatch to watch custom resources, you need to define the `customresources` section either in your values file or by using the `--set` flag with Helm commands. 
+
+Include the custom resource configuration in your values file:
+
+```yaml
+customresources:
+  - group: monitoring.coreos.com
+    version: v1
+    resource: prometheusrules
+```
+
+Then deploy or upgrade `kubwatch` with `helm upgrade` or `helm install`
+
+
+Alternatively, you can pass this configuration directly using the `--set` flag:
+
+```console
+helm install kubewatch robusta/kubewatch --set='rbac.create=true,slack.channel=#YOUR_CHANNEL,slack.token=xoxb-YOUR_TOKEN,resourcesToWatch.pod=true,resourcesToWatch.daemonset=true,customresources[0].group=monitoring.coreos.com,customresources[0].version=v1,customresources[0].resource=prometheusrules'
+```
+#### Custom RBAC roles
+After defining custom resources, make sure that kubewatch has the necessary RBAC permissions to access the custom resources you've configured. Without the appropriate permissions, `kubewatch` will not be able to monitor your custom resources, and you won't receive notifications for changes.
+
+To grant these permissions, you can define custom RBAC roles using `customRoles` within the `rbac` section of your values file or by using the `--set` flag with Helm commands. This allows you to specify exactly which API groups, resources, and actions kubewatch should have access to.
+
+Here’s how you can configure the necessary permissions to monitor your resources:
+```yaml
+rbac:
+  create: true 
+  customRoles:
+    - apiGroups: ["monitoring.coreos.com"]
+      resources: ["prometheusrules"]
+      verbs: ["get", "list", "watch"]
+```
+
+Then deploy or upgrade `kubwatch` with `helm upgrade` or `helm install`
+
+
+Alternatively, you can pass this configuration directly using the `--set` flag:
+
+```console
+helm install kubewatch robusta/kubewatch --set='rbac.create=true,slack.channel=#YOUR_CHANNEL,slack.token=xoxb-YOUR_TOKEN,customRoles[0].apiGroups={monitoring.coreos.com},customRoles[0].resources={prometheusrules},customRoles[0].verbs={get,list,watch}'
+```
+
+#### Metrics
+`kubewatch` runs a Prometheus metrics endpoint at `/metrics` on port `2112` by default. This endpoint can be used to monitor health and the performance of `kubewatch`. 
+
+The `kubewatch_events_total` metric can help track the total number of Kubernetes events, categorized by resource type (e.g., `Pods`, `Deployments`) and event type (e.g., `Create`, `Delete`).
+
+You can change the default port (`2112`) on which the metrics server listens by setting the `LISTEN_ADDRESS` environment variable. 
+Format is `host:port`. `:5454` means any host, and port `5454`
+
+
+```yaml
+extraEnvVars:
+  - name: LISTEN_ADDRESS
+    value: ":5454"
 ```
 
 ### Local Installation
@@ -210,13 +282,13 @@ INFO[0000] Kubewatch controller synced and ready         pkg=kubewatch-pod
 To Run Kubewatch Container interactively, place the config file in `$HOME/.kubewatch.yaml` location and use the following command.
 
 ```
-docker run --rm -it --network host -v $HOME/.kubewatch.yaml:/root/.kubewatch.yaml -v $HOME/.kube/config:/opt/bitnami/kubewatch/.kube/config --name <container-name> us-central1-docker.pkg.dev/genuine-flight-317411/devel/kubewatch
+docker run --rm -it --network host -v $HOME/.kubewatch.yaml:/root/.kubewatch.yaml -v $HOME/.kube/config:/opt/bitnami/kubewatch/.kube/config --name <container-name> robustadev/kubewatch
 ```
 
 Example:
 
 ```
-$ docker run --rm -it --network host -v $HOME/.kubewatch.yaml:/root/.kubewatch.yaml -v $HOME/.kube/config:/opt/bitnami/kubewatch/.kube/config --name kubewatch-app us-central1-docker.pkg.dev/genuine-flight-317411/devel/kubewatch
+$ docker run --rm -it --network host -v $HOME/.kubewatch.yaml:/root/.kubewatch.yaml -v $HOME/.kube/config:/opt/bitnami/kubewatch/.kube/config --name kubewatch-app robustadev/kubewatch
 
 ==> Writing config file...
 INFO[0000] Starting kubewatch controller                 pkg=kubewatch-service
@@ -233,7 +305,7 @@ INFO[0000] Processing add to namespace: default          pkg=kubewatch-namespace
 To Demonise Kubewatch container use
 
 ```
-$ docker run --rm -d --network host -v $HOME/.kubewatch.yaml:/root/.kubewatch.yaml -v $HOME/.kube/config:/opt/bitnami/kubewatch/.kube/config --name kubewatch-app us-central1-docker.pkg.dev/genuine-flight-317411/devel/kubewatch
+$ docker run --rm -d --network host -v $HOME/.kubewatch.yaml:/root/.kubewatch.yaml -v $HOME/.kube/config:/opt/bitnami/kubewatch/.kube/config --name kubewatch-app robustadev/kubewatch
 ```
 
 # Configure

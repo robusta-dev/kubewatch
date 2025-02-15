@@ -17,6 +17,10 @@ limitations under the License.
 package client
 
 import (
+	"net/http"
+	"os"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+
 	"github.com/bitnami-labs/kubewatch/config"
 	"github.com/bitnami-labs/kubewatch/pkg/controller"
 	"github.com/bitnami-labs/kubewatch/pkg/handlers"
@@ -36,6 +40,18 @@ import (
 
 // Run runs the event loop processing with given handler
 func Run(conf *config.Config) {
+	listenAddress := os.Getenv("LISTEN_ADDRESS")
+	if listenAddress == "" {
+		listenAddress = ":2112"
+	}
+
+	go func() {
+		http.Handle("/metrics", promhttp.Handler())
+		logrus.Infof("Starting metrics server on port %s", listenAddress)
+		if err := http.ListenAndServe(listenAddress, nil); err != nil {
+			logrus.Errorf("Error starting metrics server on port %s: %v", listenAddress, err)
+		}
+	}()
 
 	var eventHandler = ParseEventHandler(conf)
 	controller.Start(conf, eventHandler)
