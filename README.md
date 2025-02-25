@@ -15,6 +15,18 @@
 
 </div>
 
+# Fine-Grained Resource Tracking
+
+KubeWatch tracks all changes to Kubernetes resources of given types.
+
+If you need fine-grained filtering of which changes are forwarded, you can use KubeWatch in conjunction with Robusta.
+
+For more details, refer to the [Robusta docs on change-tracking](https://docs.robusta.dev/master/playbook-reference/kubernetes-examples/index.html). 
+
+A diagram showing the two options is shown below. The flow that only uses KubeWatch is purple and the flow that adds Robusta is green.
+
+![image](https://github.com/user-attachments/assets/b271e635-70d6-4bc8-9f61-4c8ae4771be4)
+
 # Latest image
 
 ```
