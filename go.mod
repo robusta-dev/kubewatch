@@ -19,6 +19,7 @@ require (
 	github.com/spf13/jwalterweatherman v0.0.0-20180109140146-7c0cea34c8ec // indirect
 	github.com/spf13/viper v1.0.0
 	github.com/tbruyelle/hipchat-go v0.0.0-20160921153256-749fb9e14beb
+	golang.org/x/crypto v0.31.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1
 	k8s.io/api v0.20.15
 	k8s.io/apimachinery v0.20.15
