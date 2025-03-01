@@ -47,6 +47,7 @@ type Handler struct {
 	MSTeams      MSTeams      `json:"msteams"`
 	SMTP         SMTP         `json:"smtp"`
 	Lark         Lark         `json:"lark"`
+	Discord      Discord      `json:"discord"`
 }
 
 // Resource contains resource configuration
@@ -195,6 +196,10 @@ type SMTPAuth struct {
 	Identity string `json:"identity" yaml:"identity,omitempty"`
 	// Secret for CRAM-MD5 auth mechanism
 	Secret string `json:"secret" yaml:"secret,omitempty"`
+}
+
+type Discord struct {
+	WebhookURL string `json:"webhookurl"`
 }
 
 // New creates new config object
