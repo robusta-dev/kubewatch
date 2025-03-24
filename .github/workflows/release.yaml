@@ -10,23 +10,31 @@ jobs:
     name: Build images
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
+
+    - uses: google-github-actions/auth@v2
+      with:
+        project_id: 'genuine-flight-317411'
+        workload_identity_provider: 'projects/429189597230/locations/global/workloadIdentityPools/github/providers/robusta-repos' # prod
 
     - name: Set up gcloud CLI
-      uses: google-github-actions/setup-gcloud@v0.2.0
+      uses: google-github-actions/setup-gcloud@v2
       with:
-        service_account_key: ${{ secrets.GCP_SA_KEY }}
         project_id: genuine-flight-317411
-        export_default_credentials: true
 
-    - name: Configure Docker
-      run: |-
-        gcloud auth configure-docker us-central1-docker.pkg.dev
+    - name: Configure Docker Registry
+      run: gcloud auth configure-docker us-central1-docker.pkg.dev
 
-    - name: Verify gcloud configuration
-      run: |-
-        gcloud config get-value project
+    - name: Login to Docker Hub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
@@ -38,22 +46,9 @@ jobs:
         context: .
         platforms: linux/arm64,linux/amd64
         push: true
-        tags: us-central1-docker.pkg.dev/genuine-flight-317411/devel/kubewatch:${{ env.RELEASE_VER }}
-
-    - name: Login to Docker Hub
-      uses: docker/login-action@v1
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
-
-    - name: Build and push Docker images Dockerhub
-      uses: docker/build-push-action@v2
-      with:
-        file: Dockerfile
-        context: .
-        platforms: linux/arm64,linux/amd64
-        push: true
-        tags: robustadev/kubewatch:${{ env.RELEASE_VER }}
+        tags: |
+          us-central1-docker.pkg.dev/genuine-flight-317411/devel/kubewatch:${{ env.RELEASE_VER }}
+          robustadev/kubewatch:${{ env.RELEASE_VER }}
 
     - name: Upload helm chart
       run: |
