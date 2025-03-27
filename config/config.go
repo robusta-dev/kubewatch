@@ -47,6 +47,7 @@ type Handler struct {
 	MSTeams      MSTeams      `json:"msteams"`
 	SMTP         SMTP         `json:"smtp"`
 	Lark         Lark         `json:"lark"`
+	Webex        Webex        `json:"webex"`
 }
 
 // Resource contains resource configuration
@@ -125,6 +126,15 @@ type Hipchat struct {
 	// Room name.
 	Room string `json:"room"`
 	// URL of the hipchat server.
+	Url string `json:"url"`
+}
+
+type Webex struct {
+	// Webex token.
+	Token string `json:"token"`
+	// Room name.
+	Room string `json:"room"`
+	// URL of the webex server.
 	Url string `json:"url"`
 }
 

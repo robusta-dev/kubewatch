@@ -121,6 +121,9 @@ spec:
             - name: configuration
               mountPath: /opt/bitnami/kubewatch/.kubewatch.yaml
               subPath: .kubewatch.yaml
+            - name: configuration
+              mountPath: /root/.kubewatch.yaml
+              subPath: .kubewatch.yaml
             {{- if .Values.extraVolumeMounts }}
             {{- include "common.tplvalues.render" (dict "value" .Values.extraVolumeMounts "context" $) | nindent 12 }}
             {{- end }}

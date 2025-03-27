@@ -53,7 +53,7 @@ import (
 	"k8s.io/client-go/util/workqueue"
 
 	"github.com/prometheus/client_golang/prometheus"
-    "github.com/prometheus/client_golang/prometheus/promauto"
+	"github.com/prometheus/client_golang/prometheus/promauto"
 )
 
 const maxRetries = 5
@@ -96,7 +96,7 @@ func objName(obj interface{}) string {
 func Start(conf *config.Config, eventHandler handlers.Handler) {
 	var kubeClient kubernetes.Interface
 	var dynamicClient dynamic.Interface
-	
+
 	kubewatchEventsMetrics := promauto.NewCounterVec(
 		prometheus.CounterOpts{
 			Name: "kubewatch_events_total",

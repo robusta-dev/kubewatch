@@ -1,0 +1,18 @@
+handler:
+  webex:
+    enabled: true
+    token: token
+    room: room_id
+    url: https://webexapis.com/v1/messages
+resource:
+  deployment: true
+  replicationcontroller: false
+  replicaset: false
+  daemonset: false
+  services: false
+  pod: false
+  job: false
+  persistentvolume: false
+  ingress: false
+  event: false
+  coreevent: false

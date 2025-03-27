@@ -15,6 +15,7 @@ package event
 
 import (
 	"fmt"
+	"os"
 	"k8s.io/apimachinery/pkg/runtime"
 )
 
@@ -44,50 +45,59 @@ var m = map[string]string{
 // included as a part of event packege to enhance code resuablity across handlers.
 func (e *Event) Message() (msg string) {
 	// using switch over if..else, since the format could vary based on the kind of the object in future.
+	kubewatchName := os.Getenv("KUBEWATCH_NAME")
 	switch e.Kind {
 	case "namespace":
 		msg = fmt.Sprintf(
-			"A namespace `%s` has been `%s`",
+			"`%s` - A namespace `%s` has been `%s`",
+			kubewatchName,
 			e.Name,
 			e.Reason,
 		)
 	case "node":
 		msg = fmt.Sprintf(
-			"A node `%s` has been `%s`",
+			"`%s` - A node `%s` has been `%s`",
+			kubewatchName,
 			e.Name,
 			e.Reason,
 		)
 	case "cluster role":
 		msg = fmt.Sprintf(
-			"A cluster role `%s` has been `%s`",
+			"`%s` - A cluster role `%s` has been `%s`",
+			kubewatchName,
 			e.Name,
 			e.Reason,
 		)
 	case "NodeReady":
 		msg = fmt.Sprintf(
-			"Node `%s` is Ready : \nNodeReady",
+			"`%s` - Node `%s` is Ready : \nNodeReady",
+			kubewatchName,
 			e.Name,
 		)
 	case "NodeNotReady":
 		msg = fmt.Sprintf(
-			"Node `%s` is Not Ready : \nNodeNotReady",
+			"`%s` - Node `%s` is Not Ready : \nNodeNotReady",
+			kubewatchName,
 			e.Name,
 		)
 	case "NodeRebooted":
 		msg = fmt.Sprintf(
-			"Node `%s` Rebooted : \nNodeRebooted",
+			"`%s` - Node `%s` Rebooted : \nNodeRebooted",
+			kubewatchName,
 			e.Name,
 		)
 	case "Backoff":
 		msg = fmt.Sprintf(
-			"Pod `%s` in `%s` Crashed : \nCrashLoopBackOff %s",
+			"`%s` - Pod `%s` in `%s` Crashed : \nCrashLoopBackOff %s",
+			kubewatchName,
 			e.Name,
 			e.Namespace,
 			e.Reason,
 		)
 	default:
 		msg = fmt.Sprintf(
-			"A `%s` in namespace `%s` has been `%s`:\n`%s`",
+			"`%s` - A `%s` in namespace `%s` has been `%s`:\n`%s`",
+			kubewatchName,
 			e.Kind,
 			e.Namespace,
 			e.Reason,
