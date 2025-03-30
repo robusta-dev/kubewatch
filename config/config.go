@@ -94,6 +94,19 @@ type Config struct {
 	// For watching specific namespace, leave it empty for watching all.
 	// this config is ignored when watching namespaces
 	Namespace string `json:"namespace,omitempty"`
+
+	// Specify fields to skip sending object update. Will be applied to all objects.
+	// If after removal of these fields from k8s object all remaining fields will be equal,
+	// handler won't trigger sending update. Removing array elements is not supported.
+	// For example,
+	// ignorefields:
+	//   status:
+	//   metadata:
+	//     resourceVersion:
+	//     managedFields:
+	// will remove ".status", ".metadata.resourceVersion" and ".metadata.managedFields"
+	// from k8s object before comparing old & new k8s objects.
+	IgnoredFields map[string]interface{} `json:"ignoredfields,omitempty"`
 }
 
 // Slack contains slack configuration
