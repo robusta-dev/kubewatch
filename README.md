@@ -53,6 +53,7 @@ supported webhooks:
  - webhook
  - cloudevent
  - smtp
+ - webex
 
 Usage:
   kubewatch [flags]
@@ -482,6 +483,10 @@ handler:
     token: xoxb-xxxxx-yyyy-zzz
     channel: kube-watch
   hipchat:
+    token: ""
+    room: ""
+    url: ""
+  webex:
     token: ""
     room: ""
     url: ""

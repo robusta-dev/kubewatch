@@ -17,9 +17,9 @@ limitations under the License.
 package client
 
 import (
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"net/http"
 	"os"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
 
 	"github.com/bitnami-labs/kubewatch/config"
 	"github.com/bitnami-labs/kubewatch/pkg/controller"
@@ -33,6 +33,7 @@ import (
 	"github.com/bitnami-labs/kubewatch/pkg/handlers/slack"
 	"github.com/bitnami-labs/kubewatch/pkg/handlers/slackwebhook"
 	"github.com/bitnami-labs/kubewatch/pkg/handlers/smtp"
+	"github.com/bitnami-labs/kubewatch/pkg/handlers/webex"
 	"github.com/bitnami-labs/kubewatch/pkg/handlers/webhook"
 	"github.com/sirupsen/logrus"
 )
@@ -67,6 +68,8 @@ func ParseEventHandler(conf *config.Config) handlers.Handler {
 		eventHandler = new(slackwebhook.SlackWebhook)
 	case len(conf.Handler.Hipchat.Room) > 0 || len(conf.Handler.Hipchat.Token) > 0:
 		eventHandler = new(hipchat.Hipchat)
+	case len(conf.Handler.Webex.Room) > 0 || len(conf.Handler.Webex.Token) > 0:
+		eventHandler = new(webex.Webex)
 	case len(conf.Handler.Mattermost.Channel) > 0 || len(conf.Handler.Mattermost.Url) > 0:
 		eventHandler = new(mattermost.Mattermost)
 	case len(conf.Handler.Flock.Url) > 0:

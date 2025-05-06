@@ -112,6 +112,16 @@ hipchat:
   room: ""
   token: ""
   url: ""
+## @param webex.enabled Enable Webex notifications
+## @param webex.room Webex room to notify
+## @param webex.token Webex token
+## @param webex.url Webex URL
+##
+webex:
+  enabled: false
+  room: ""
+  token: ""
+  url: ""
 ## @param mattermost.enabled Enable Mattermost notifications
 ## @param mattermost.channel Mattermost channel to notify
 ## @param mattermost.url Mattermost URL
@@ -238,7 +248,9 @@ lifecycleHooks: {}
 ##   - name: FOO
 ##     value: "bar"
 ##
-extraEnvVars: []
+extraEnvVars:
+  - name: KUBEWATCH_NAME
+    value: ""
 ## @param extraEnvVarsCM Name of existing ConfigMap containing extra env vars
 ##
 extraEnvVarsCM: ""

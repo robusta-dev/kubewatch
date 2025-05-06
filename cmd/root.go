@@ -49,6 +49,7 @@ supported webhooks:
  - flock
  - webhook
  - lark
+ - webex
 `,
 
 	Run: func(cmd *cobra.Command, args []string) {
