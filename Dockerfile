@@ -1,5 +1,4 @@
 FROM golang AS builder
-LABEL maintainer="Cuong Manh Le <cuong.manhle.vn@gmail.com>"
 
 RUN apt-get update && \
     dpkg --add-architecture arm64 &&\
