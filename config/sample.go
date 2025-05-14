@@ -36,6 +36,8 @@ handler:
   msteams:
     # MSTeams API Webhook URL.
     webhookurl: ""
+  discord:
+    webhookurl: ""
   smtp:
     # Destination e-mail address.
     to: ""

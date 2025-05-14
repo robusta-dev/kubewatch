@@ -37,12 +37,12 @@ func TestWebhookInit(t *testing.T) {
 		slackwebhook config.SlackWebhook
 		err          error
 	}{
-		{config.SlackWebhook{Channel: "foo", Username: "bar", Slackwebhookurl: "you"}, nil},
-		{config.SlackWebhook{Channel: "foo"}, fmt.Errorf(webhookErrMsg, "Missing Slack Webhook Username")},
-		{config.SlackWebhook{Username: "bar"}, fmt.Errorf(webhookErrMsg, "Missing Slack Webhook Channel")},
-		{config.SlackWebhook{Emoji: ":kubernetes:"}, fmt.Errorf(webhookErrMsg, "Missing Slack Webhook Channel")},
-		{config.SlackWebhook{Slackwebhookurl: "you"}, fmt.Errorf(webhookErrMsg, "Missing Slack Webhook Channel")},
-		{config.SlackWebhook{}, fmt.Errorf(webhookErrMsg, "Missing Slack Webhook Channel")},
+		{config.SlackWebhook{Channel: "foo", Username: "bar", Slackwebhookurl: "somepath"}, nil},
+		{config.SlackWebhook{Channel: "foo"}, fmt.Errorf(webhookErrMsg, "Missing Slack Webhook url")},
+		{config.SlackWebhook{Username: "bar"}, fmt.Errorf(webhookErrMsg, "Missing Slack Webhook url")},
+		{config.SlackWebhook{Emoji: ":kubernetes:"}, fmt.Errorf(webhookErrMsg, "Missing Slack Webhook url")},
+		{config.SlackWebhook{Slackwebhookurl: "somepath"}, nil},
+		{config.SlackWebhook{}, fmt.Errorf(webhookErrMsg, "Missing Slack Webhook url")},
 	}
 
 	for _, tt := range Tests {

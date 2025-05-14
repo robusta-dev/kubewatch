@@ -122,5 +122,6 @@ func init() {
 		msteamsConfigCmd,
 		smtpConfigCmd,
 		larkConfigCmd,
+		discordConfigCmd,
 	)
 }
