@@ -83,7 +83,7 @@ func (f *Filter) ShouldSendEvent(e event.Event) bool {
 func (f *Filter) shouldSendEventResource(e event.Event) bool {
 	// For Event resources, only send warning events and only create events
 	if e.Reason != "Created" {
-		logrus.Infof("Filtering out Event resource - reason: %s (only 'Created' events are sent)", e.Reason)
+		logrus.Debugf("Filtering out Event resource - reason: %s (only 'Created' events are sent)", e.Reason)
 		return false
 	}
 
@@ -91,12 +91,12 @@ func (f *Filter) shouldSendEventResource(e event.Event) bool {
 	switch obj := e.Obj.(type) {
 	case *api_v1.Event:
 		if obj.Type != api_v1.EventTypeWarning {
-			logrus.Infof("Filtering out Event resource - type: %s (only Warning events are sent)", obj.Type)
+			logrus.Debugf("Filtering out Event resource - type: %s (only Warning events are sent)", obj.Type)
 			return false
 		}
 	case *events_v1.Event:
 		if obj.Type != api_v1.EventTypeWarning {
-			logrus.Infof("Filtering out Event resource - type: %s (only Warning events are sent)", obj.Type)
+			logrus.Debugf("Filtering out Event resource - type: %s (only Warning events are sent)", obj.Type)
 			return false
 		}
 	default:
@@ -131,19 +131,19 @@ func (f *Filter) shouldSendJobEvent(e event.Event) bool {
 
 		// Check if spec changed
 		if !reflect.DeepEqual(job.Spec, oldJob.Spec) {
-			logrus.Infof("Job %s spec changed, sending update event", job.Name)
+			logrus.Debugf("Job %s spec changed, sending update event", job.Name)
 			return true
 		}
 
 		// Check if job failed
 		for _, condition := range job.Status.Conditions {
 			if condition.Type == batch_v1.JobFailed && condition.Status == api_v1.ConditionTrue {
-				logrus.Infof("Job %s failed, sending update event", job.Name)
+				logrus.Debugf("Job %s failed, sending update event", job.Name)
 				return true
 			}
 		}
 
-		logrus.Infof("Filtering out Job update event - no spec change or failure detected")
+		logrus.Debugf("Filtering out Job update event - no spec change or failure detected")
 		return false
 	}
 
@@ -174,35 +174,35 @@ func (f *Filter) shouldSendPodEvent(e event.Event) bool {
 
 		// Check if spec changed
 		if !reflect.DeepEqual(pod.Spec, oldPod.Spec) {
-			logrus.Infof("Pod %s spec changed, sending update event", pod.Name)
+			logrus.Debugf("Pod %s spec changed, sending update event", pod.Name)
 			return true
 		}
 
 		// Check for container restarts
 		if f.hasContainerRestarted(pod) {
-			logrus.Infof("Pod %s has container restarts, sending update event", pod.Name)
+			logrus.Debugf("Pod %s has container restarts, sending update event", pod.Name)
 			return true
 		}
 
 		// Check for ImagePullBackOff
 		if f.hasImagePullBackOff(pod) {
-			logrus.Infof("Pod %s has ImagePullBackOff, sending update event", pod.Name)
+			logrus.Debugf("Pod %s has ImagePullBackOff, sending update event", pod.Name)
 			return true
 		}
 
 		// Check if pod is evicted
 		if f.isPodEvicted(pod) {
-			logrus.Infof("Pod %s is evicted, sending update event", pod.Name)
+			logrus.Debugf("Pod %s is evicted, sending update event", pod.Name)
 			return true
 		}
 
 		// Check for OOMKilled
 		if f.hasOOMKilled(pod) {
-			logrus.Infof("Pod %s has OOMKilled container, sending update event", pod.Name)
+			logrus.Debugf("Pod %s has OOMKilled container, sending update event", pod.Name)
 			return true
 		}
 
-		logrus.Infof("Filtering out Pod update event - no significant changes detected")
+		logrus.Debugf("Filtering out Pod update event - no significant changes detected")
 		return false
 	}
 

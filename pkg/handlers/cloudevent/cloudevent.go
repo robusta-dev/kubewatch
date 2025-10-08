@@ -95,7 +95,7 @@ func (m *CloudEvent) Init(c *config.Config) error {
 func (m *CloudEvent) Handle(e event.Event) {
 	// Apply filtering if enabled
 	if !m.Filter.ShouldSendEvent(e) {
-		logrus.Infof("Event filtered out - Kind: %s, Reason: %s, Name: %s", e.Kind, e.Reason, e.Name)
+		logrus.Debugf("Event filtered out - Kind: %s, Reason: %s, Name: %s", e.Kind, e.Reason, e.Name)
 		return
 	}
 
