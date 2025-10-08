@@ -28,6 +28,7 @@ import (
 
 	"github.com/bitnami-labs/kubewatch/config"
 	"github.com/bitnami-labs/kubewatch/pkg/event"
+	"github.com/bitnami-labs/kubewatch/pkg/filter"
 	"k8s.io/apimachinery/pkg/runtime"
 )
 
@@ -49,6 +50,7 @@ type CloudEvent struct {
 	Url       string
 	StartTime uint64
 	Counter   uint64
+	Filter    *filter.Filter
 }
 
 type CloudEventMessage struct {
@@ -77,6 +79,7 @@ func (m *CloudEvent) Init(c *config.Config) error {
 	m.Url = c.Handler.CloudEvent.Url
 	m.StartTime = uint64(time.Now().Unix())
 	m.Counter = 0
+	m.Filter = filter.NewFilter()
 
 	if m.Url == "" {
 		m.Url = os.Getenv("KW_CLOUDEVENT_URL")
@@ -90,6 +93,12 @@ func (m *CloudEvent) Init(c *config.Config) error {
 }
 
 func (m *CloudEvent) Handle(e event.Event) {
+	// Apply filtering if enabled
+	if !m.Filter.ShouldSendEvent(e) {
+		logrus.Infof("Event filtered out - Kind: %s, Reason: %s, Name: %s", e.Kind, e.Reason, e.Name)
+		return
+	}
+
 	m.Counter++ // TODO: do we have to worry about threadsafety here?
 	message := m.prepareMessage(e)
 
