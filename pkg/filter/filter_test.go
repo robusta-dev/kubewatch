@@ -116,6 +116,30 @@ func TestShouldSendEventResource(t *testing.T) {
 			},
 			expected: true,
 		},
+		{
+			name: "Evicted Event Normal Type - Should Send",
+			event: event.Event{
+				Kind:   "Event",
+				Reason: "Created",
+				Obj: &api_v1.Event{
+					Type:   api_v1.EventTypeNormal,
+					Reason: "Evicted",
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "Evicted EventsV1 Normal Type - Should Send",
+			event: event.Event{
+				Kind:   "Event",
+				Reason: "Created",
+				Obj: &events_v1.Event{
+					Type:   api_v1.EventTypeNormal,
+					Reason: "Evicted",
+				},
+			},
+			expected: true,
+		},
 	}
 
 	for _, tt := range tests {

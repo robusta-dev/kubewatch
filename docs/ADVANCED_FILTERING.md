@@ -21,9 +21,11 @@ When advanced filtering is enabled, the following rules are applied:
 
 ### Event Resources (api/v1/Event and events.k8s.io/v1/Event)
 
-- **Sent**: Only Warning events that are Created
+- **Sent**:
+  - Warning events that are Created
+  - Any event with Reason "Evicted" (regardless of Type - Normal or Warning)
 - **Filtered**:
-  - Normal events (regardless of operation)
+  - Normal events (unless Reason is "Evicted")
   - Warning events with Update or Delete operations
 
 ### Job Resources

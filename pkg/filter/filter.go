@@ -87,6 +87,25 @@ func (f *Filter) shouldSendEventResource(e event.Event) bool {
 		return false
 	}
 
+	// Check the event reason - always send Evicted events regardless of type
+	isEvictedEvent := false
+	switch obj := e.Obj.(type) {
+	case *api_v1.Event:
+		if obj.Reason == "Evicted" {
+			isEvictedEvent = true
+			logrus.Debugf("Event resource with reason 'Evicted' will be sent regardless of type")
+		}
+	case *events_v1.Event:
+		if obj.Reason == "Evicted" {
+			isEvictedEvent = true
+			logrus.Debugf("Event resource with reason 'Evicted' will be sent regardless of type")
+		}
+	}
+
+	if isEvictedEvent {
+		return true
+	}
+
 	// Check if it's a warning event
 	switch obj := e.Obj.(type) {
 	case *api_v1.Event:

@@ -29,6 +29,7 @@ import (
 	"github.com/bitnami-labs/kubewatch/config"
 	"github.com/bitnami-labs/kubewatch/pkg/event"
 	"github.com/bitnami-labs/kubewatch/pkg/filter"
+	"github.com/bitnami-labs/kubewatch/pkg/metrics"
 	"k8s.io/apimachinery/pkg/runtime"
 )
 
@@ -97,6 +98,22 @@ func (m *CloudEvent) Handle(e event.Event) {
 	if !m.Filter.ShouldSendEvent(e) {
 		logrus.Debugf("Event filtered out - Kind: %s, Reason: %s, Name: %s", e.Kind, e.Reason, e.Name)
 		return
+	}
+
+	// Increment the sent metrics counter
+	// Map event.Reason to eventType for consistency with the total metrics
+	eventType := "unknown"
+	switch e.Reason {
+	case "Created":
+		eventType = "create"
+	case "Updated":
+		eventType = "update"
+	case "Deleted":
+		eventType = "delete"
+	}
+
+	if metrics.EventsSentTotal != nil {
+		metrics.EventsSentTotal.WithLabelValues(e.Kind, eventType).Inc()
 	}
 
 	m.Counter++ // TODO: do we have to worry about threadsafety here?
