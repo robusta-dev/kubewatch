@@ -71,7 +71,7 @@ func ParseEventHandler(conf *config.Config) handlers.Handler {
 		eventHandler = new(mattermost.Mattermost)
 	case len(conf.Handler.Flock.Url) > 0:
 		eventHandler = new(flock.Flock)
-	case len(conf.Handler.Webhook.Url) > 0:
+	case len(conf.Handler.Webhook.Url) > 0 || len(os.Getenv("KW_WEBHOOK_URL")) > 0:
 		eventHandler = new(webhook.Webhook)
 	case len(conf.Handler.CloudEvent.Url) > 0:
 		eventHandler = new(cloudevent.CloudEvent)
