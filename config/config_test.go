@@ -18,8 +18,8 @@ package config
 
 import (
 //"io/ioutil"
-//"os"
-//"testing"
+"os"
+"testing"
 )
 
 var configStr = `
@@ -48,30 +48,15 @@ var configStr = `
 }
 `
 
-//func TestLoadOK(t *testing.T) {
-//	content := []byte(configStr)
-//	tmpConfigFile, err := ioutil.TempFile(homeDir(), "kubewatch")
-//	if err != nil {
-//		t.Fatalf("TestLoad(): %+v", err)
-//	}
-//
-//	defer func() {
-//		_ = os.Remove(tmpConfigFile.Name())
-//	}()
-//
-//	if _, err := tmpConfigFile.Write(content); err != nil {
-//		t.Fatalf("TestLoad(): %+v", err)
-//	}
-//	if err := tmpConfigFile.Close(); err != nil {
-//		t.Fatalf("TestLoad(): %+v", err)
-//	}
-//
-//	ConfigFileName = "kubewatch"
-//
-//	c, err := New()
-//
-//	err = c.Load()
-//	if err != nil {
-//		t.Fatalf("TestLoad(): %+v", err)
-//	}
-//}
+func TestCheckMissingResourceEnvvars_Webhook(t *testing.T) {
+	expectedURL := "http://example.com/webhook"
+	os.Setenv("KW_WEBHOOK_URL", expectedURL)
+	defer os.Unsetenv("KW_WEBHOOK_URL")
+
+	c := &Config{}
+	c.CheckMissingResourceEnvvars()
+
+	if c.Handler.Webhook.Url != expectedURL {
+		t.Errorf("Expected Webhook URL to be %q, but got %q", expectedURL, c.Handler.Webhook.Url)
+	}
+}
