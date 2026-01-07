@@ -133,10 +133,11 @@ func postMessage(url string, flockMessage *FlockMessage) error {
 	req.Header.Add("Content-Type", "application/json")
 
 	client := &http.Client{}
-	_, err = client.Do(req)
+	resp, err := client.Do(req)
 	if err != nil {
 		return err
 	}
+	defer resp.Body.Close()
 
 	return nil
 }
