@@ -1,4 +1,4 @@
-FROM golang AS builder
+FROM golang:1.26 AS builder
 
 RUN apt-get update && \
     dpkg --add-architecture arm64 &&\
