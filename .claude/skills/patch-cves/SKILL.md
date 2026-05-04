@@ -133,6 +133,12 @@ RUN apt-get install -y package-name
 
 ## Key Considerations
 
+### Upgrade Guidelines
+- **Research CVEs first** - Read about each CVE online to understand affected version ranges and what versions are considered safe
+- **Minimum required upgrades** - Do not bump major versions unless strictly necessary to fix the CVE; prefer the smallest version bump that resolves the issue
+- **Prefer known stable versions** - When possible, avoid patching to a version released less than a month ago; choose the most recent stable release that is at least a month old
+- **Preserve version operators** - Keep the same constraint operator (`==`, `>=`, `>`, etc.) when updating version pins; switching between `>` and `>=` is acceptable only when it improves clarity
+
 ### Python Package CVEs
 - Check if vulnerability is in the installed wheel vs source
 - For indirect dependencies, finding the transitive source is critical
