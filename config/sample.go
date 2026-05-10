@@ -83,4 +83,10 @@ resource:
 # For watching specific namespace, leave it empty for watching all.
 # this config is ignored when watching namespaces
 namespace: ""
+# Label selectors to filter resources by labels before sending notifications.
+# Supports standard Kubernetes label selector syntax:
+#   deployment: "app=foo"
+#   pod: "app in (foo,bar),tier=frontend"
+# Only events from resources whose labels match the selector will be sent.
+labelselectors: {}
 `

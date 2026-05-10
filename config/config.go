@@ -23,6 +23,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"strings"
 
 	"gopkg.in/yaml.v3"
 )
@@ -94,6 +95,16 @@ type Config struct {
 	// For watching specific namespace, leave it empty for watching all.
 	// this config is ignored when watching namespaces
 	Namespace string `json:"namespace,omitempty"`
+
+	// LabelSelectors is a map of resource type to label selector string.
+	// The label selector uses standard Kubernetes syntax:
+	//   app=foo
+	//   app!=foo
+	//   app in (foo,bar)
+	//   app notin (foo,bar)
+	//   app=foo,tier=frontend
+	// Only events from resources whose labels match the selector will be sent.
+	LabelSelectors map[string]string `json:"labelselectors,omitempty"`
 }
 
 // Slack contains slack configuration
@@ -310,6 +321,27 @@ func (c *Config) CheckMissingResourceEnvvars() {
 	}
 	if (c.Handler.Webhook.Url == "") && (os.Getenv("KW_WEBHOOK_URL") != "") {
 		c.Handler.Webhook.Url = os.Getenv("KW_WEBHOOK_URL")
+	}
+
+	c.checkMissingLabelSelectorEnvvars()
+}
+
+func (c *Config) checkMissingLabelSelectorEnvvars() {
+	for _, env := range os.Environ() {
+		if !strings.HasPrefix(env, "KW_LABEL_SELECTOR_") {
+			continue
+		}
+		parts := strings.SplitN(env, "=", 2)
+		if len(parts) != 2 {
+			continue
+		}
+		resource := strings.ToLower(strings.TrimPrefix(parts[0], "KW_LABEL_SELECTOR_"))
+		if c.LabelSelectors == nil {
+			c.LabelSelectors = make(map[string]string)
+		}
+		if _, exists := c.LabelSelectors[resource]; !exists {
+			c.LabelSelectors[resource] = parts[1]
+		}
 	}
 }
 
