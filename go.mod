@@ -1,6 +1,6 @@
 module github.com/bitnami-labs/kubewatch
 
-go 1.25
+go 1.26.2
 
 toolchain go1.26.4
 
