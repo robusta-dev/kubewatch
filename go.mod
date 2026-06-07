@@ -1,8 +1,8 @@
 module github.com/bitnami-labs/kubewatch
 
-go 1.24.0
+go 1.25
 
-toolchain go1.24.3
+toolchain go1.26.4
 
 require (
 	github.com/fatih/structtag v1.2.0
@@ -10,7 +10,7 @@ require (
 	github.com/prometheus/client_golang v1.20.3
 	github.com/segmentio/textio v1.2.0
 	github.com/sirupsen/logrus v1.9.3
-	github.com/slack-go/slack v0.6.5
+	github.com/slack-go/slack v0.23.1
 	github.com/spf13/cobra v0.0.1
 	github.com/spf13/viper v1.0.0
 	github.com/tbruyelle/hipchat-go v0.0.0-20160921153256-749fb9e14beb
