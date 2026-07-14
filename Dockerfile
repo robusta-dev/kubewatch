@@ -2,18 +2,19 @@
 # Patching CVE-2026-33811, CVE-2026-33814, CVE-2026-39817, CVE-2026-39819, CVE-2026-39820,
 # CVE-2026-39823, CVE-2026-39825, CVE-2026-39826, CVE-2026-39836, CVE-2026-42499, CVE-2026-42501,
 # CVE-2026-42504, CVE-2026-42507, CVE-2026-27145: requires Go >= 1.26.4
-FROM golang:1.26.4 AS builder
+# Build on the native build platform and cross-compile to the target arch with the
+# Go toolchain. This avoids running the Go compiler under QEMU emulation (which can
+# crash), so multi-arch builds (linux/amd64 + linux/arm64) work reliably.
+FROM --platform=$BUILDPLATFORM golang:1.26.4 AS builder
 
-RUN apt-get update && \
-    dpkg --add-architecture arm64 &&\
-    apt-get install -y --no-install-recommends build-essential && \
-    apt-get clean && \
-    mkdir -p "$GOPATH/src/github.com/bitnami-labs/kubewatch"
+RUN mkdir -p "$GOPATH/src/github.com/bitnami-labs/kubewatch"
 
 ADD . "$GOPATH/src/github.com/bitnami-labs/kubewatch"
 
+ARG TARGETOS=linux
+ARG TARGETARCH
 RUN cd "$GOPATH/src/github.com/bitnami-labs/kubewatch" && \
-    CGO_ENABLED=0 GOOS=linux GOARCH=$(dpkg --print-architecture) go build -a --installsuffix cgo --ldflags="-s" -o /kubewatch
+    CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -a --installsuffix cgo --ldflags="-s" -o /kubewatch
 
 # Patching CVE-2026-4046, CVE-2026-4437: requires glibc >= 2.44, provided by chainguard/bash built after May 2026
 FROM cgr.dev/chainguard/bash:latest
