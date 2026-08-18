@@ -31,6 +31,7 @@ import (
 	"github.com/bitnami-labs/kubewatch/config"
 	"github.com/bitnami-labs/kubewatch/pkg/event"
 	"github.com/bitnami-labs/kubewatch/pkg/handlers"
+	"github.com/bitnami-labs/kubewatch/pkg/redact"
 	"github.com/bitnami-labs/kubewatch/pkg/utils"
 	"github.com/sirupsen/logrus"
 
@@ -783,7 +784,7 @@ func (c *Controller) processItem(newEvent Event) error {
 				ApiVersion: newEvent.apiVersion,
 				Status:     status,
 				Reason:     "Created",
-				Obj:        newEvent.obj,
+				Obj:        redact.Object(newEvent.obj),
 			}
 			c.eventHandler.Handle(kbEvent)
 			return nil
@@ -805,8 +806,8 @@ func (c *Controller) processItem(newEvent Event) error {
 			ApiVersion: newEvent.apiVersion,
 			Status:     status,
 			Reason:     "Updated",
-			Obj:        newEvent.obj,
-			OldObj:     newEvent.oldObj,
+			Obj:        redact.Object(newEvent.obj),
+			OldObj:     redact.Object(newEvent.oldObj),
 		}
 		c.eventHandler.Handle(kbEvent)
 		return nil
@@ -818,7 +819,7 @@ func (c *Controller) processItem(newEvent Event) error {
 			ApiVersion: newEvent.apiVersion,
 			Status:     "Danger",
 			Reason:     "Deleted",
-			Obj:        newEvent.obj,
+			Obj:        redact.Object(newEvent.obj),
 		}
 		c.eventHandler.Handle(kbEvent)
 		return nil

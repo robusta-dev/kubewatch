@@ -177,6 +177,21 @@ customresources:
     resource: prometheusrules
 ```
 
+#### Watching Secrets
+
+Secret watching is off by default (`secret: false`). When you turn it on, kubewatch
+notifies on Secret creates, updates and deletes, but the secret material itself never
+leaves the process: the values under a Secret's `data` and `stringData` are replaced
+with `[redacted by kubewatch]` before any notification is built. This applies to the
+previous version of the object too, which update notifications also carry, and to
+Secrets reached through `customresources` rather than `secret: true`.
+
+Key names, labels, annotations, the Secret's type and the rest of its metadata are
+kept, so a notification still tells you which Secret changed and which of its keys
+were added or removed — it just does not tell you their values. Handlers that
+serialize whole objects, such as `cloudevent`, redact again on the bytes they are
+about to send.
+
 #### Working with RBAC
 
 Kubernetes Engine clusters running versions 1.6 or higher introduced Role-Based Access Control (RBAC). We can create `ServiceAccount` for it to work with RBAC.
