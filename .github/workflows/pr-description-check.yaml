@@ -14,14 +14,21 @@ jobs:
 
     - name: Validate PR description
       id: validate
+      # The body reaches bash through the environment, never through ${{ }}
+      # interpolation. Interpolating it built the script text out of untrusted
+      # input: backticks in a description ran as commands on the runner, and a
+      # double quote ended the string bash was parsing, failing the step with
+      # "conditional binary operator expected" on a perfectly good description.
+      env:
+        PR_BODY: ${{ github.event.pull_request.body }}
       run: |
-        if [[ ! "${{ github.event.pull_request.body }}" =~ "## Tests performed" ]]; then
+        if [[ ! "$PR_BODY" =~ "## Tests performed" ]]; then
           echo "PR description does not contain the section 'Tests performed'."
           exit 1
         fi
 
-        # Extract the "Tests performed" section
-        tests_performed_section=$(sed -n '/## Tests performed/,/##/p' <<< "${{ github.event.pull_request.body }}")
+        # Extract the "Tests performed" section, up to the next h2 heading
+        tests_performed_section=$(sed -n '/^## Tests performed/,/^## /p' <<< "$PR_BODY")
 
         # Check if there is at least one test description in the "Tests performed" section
         if [[ ! "$tests_performed_section" =~ "- " ]]; then

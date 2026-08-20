@@ -30,6 +30,7 @@ import (
 	"github.com/bitnami-labs/kubewatch/pkg/event"
 	"github.com/bitnami-labs/kubewatch/pkg/filter"
 	"github.com/bitnami-labs/kubewatch/pkg/metrics"
+	"github.com/bitnami-labs/kubewatch/pkg/redact"
 	"k8s.io/apimachinery/pkg/runtime"
 )
 
@@ -142,8 +143,11 @@ func (m *CloudEvent) prepareMessage(e event.Event) *CloudEventMessage {
 			ApiVersion:  e.ApiVersion,
 			ClusterUid:  "TODO",
 			Description: e.Message(),
-			Obj:         e.Obj,
-			OldObj:      e.OldObj,
+			// The controller already redacts these, but this handler serializes
+			// whole objects to an off-cluster receiver, so it redacts again
+			// rather than trusting its caller.
+			Obj:    redact.Object(e.Obj),
+			OldObj: redact.Object(e.OldObj),
 		},
 	}
 }
@@ -165,6 +169,14 @@ func (m *CloudEvent) postMessage(webhookMessage *CloudEventMessage) error {
 	message, err := json.Marshal(webhookMessage)
 	if err != nil {
 		return err
+	}
+
+	// Defensive last pass over the actual wire bytes: catches Secrets the typed
+	// layer cannot recognise, notably the unstructured Secrets an operator can
+	// reach through `customresources` without enabling `resource.secret`.
+	message, err = redact.JSON(message)
+	if err != nil {
+		return fmt.Errorf("failed to redact outbound message, not sending it: %v", err)
 	}
 
 	req, err := http.NewRequest("POST", m.Url, bytes.NewBuffer(message))
