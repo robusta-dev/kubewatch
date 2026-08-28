@@ -599,10 +599,10 @@ func Start(conf *config.Config, eventHandler handlers.Handler) {
 
 func newResourceController(client kubernetes.Interface, eventHandler handlers.Handler, informer cache.SharedIndexInformer, resourceType string, apiVersion string, kubewatchEventsMetrics *prometheus.CounterVec) *Controller {
 	queue := workqueue.NewRateLimitingQueue(workqueue.DefaultControllerRateLimiter())
-	var newEvent Event
-	var err error
 	informer.AddEventHandler(cache.ResourceEventHandlerFuncs{
 		AddFunc: func(obj interface{}) {
+			var newEvent Event
+			var err error
 			var ok bool
 			newEvent.namespace = "" // namespace retrived in processItem incase namespace value is empty
 			newEvent.key, err = cache.MetaNamespaceKeyFunc(obj)
@@ -621,6 +621,8 @@ func newResourceController(client kubernetes.Interface, eventHandler handlers.Ha
 			kubewatchEventsMetrics.WithLabelValues(resourceType, "create").Inc()
 		},
 		UpdateFunc: func(old, new interface{}) {
+			var newEvent Event
+			var err error
 			var ok bool
 			newEvent.namespace = "" // namespace retrived in processItem incase namespace value is empty
 			newEvent.key, err = cache.MetaNamespaceKeyFunc(old)
@@ -643,6 +645,8 @@ func newResourceController(client kubernetes.Interface, eventHandler handlers.Ha
 			kubewatchEventsMetrics.WithLabelValues(resourceType, "update").Inc()
 		},
 		DeleteFunc: func(obj interface{}) {
+			var newEvent Event
+			var err error
 			var ok bool
 			newEvent.namespace = "" // namespace retrived in processItem incase namespace value is empty
 			newEvent.key, err = cache.DeletionHandlingMetaNamespaceKeyFunc(obj)
