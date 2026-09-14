@@ -30,8 +30,11 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 	api_v1 "k8s.io/api/core/v1"
 	meta_v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/watch"
+	dynamicfake "k8s.io/client-go/dynamic/fake"
 	"k8s.io/client-go/kubernetes"
 	k8sfake "k8s.io/client-go/kubernetes/fake"
 	"k8s.io/client-go/tools/cache"
@@ -215,5 +218,69 @@ func TestSecretRedactionLeavesInformerCacheIntact(t *testing.T) {
 	}
 	if got := string(cached.(*api_v1.Secret).Data["password"]); got != sentinel {
 		t.Errorf("informer cache was mutated: Data[password] = %q, want %q", got, sentinel)
+	}
+}
+
+func TestCustomResourceCreateReachesHandler(t *testing.T) {
+	gvr := schema.GroupVersionResource{Group: "example.com", Version: "v1", Resource: "widgets"}
+	existing := &unstructured.Unstructured{Object: map[string]interface{}{
+		"apiVersion": "example.com/v1",
+		"kind":       "Widget",
+		"metadata": map[string]interface{}{
+			"name":              "existing",
+			"namespace":         "default",
+			"creationTimestamp": "2020-01-01T00:00:00Z",
+		},
+	}}
+	dynamicClient := dynamicfake.NewSimpleDynamicClientWithCustomListKinds(
+		runtime.NewScheme(),
+		map[schema.GroupVersionResource]string{gvr: "WidgetList"},
+		existing,
+	)
+	informer := cache.NewSharedIndexInformer(
+		&cache.ListWatch{
+			ListFunc: func(options meta_v1.ListOptions) (runtime.Object, error) {
+				return dynamicClient.Resource(gvr).List(context.Background(), options)
+			},
+			WatchFunc: func(options meta_v1.ListOptions) (watch.Interface, error) {
+				return dynamicClient.Resource(gvr).Watch(context.Background(), options)
+			},
+		},
+		&unstructured.Unstructured{},
+		0,
+		cache.Indexers{},
+	)
+
+	handler := &recordingHandler{}
+	metrics := prometheus.NewCounterVec(prometheus.CounterOpts{Name: "custom_resource_events_total"}, []string{"resource", "type"})
+	controller := newResourceController(k8sfake.NewSimpleClientset(), handler, informer, gvr.Resource, "example.com/v1", metrics)
+	stop := make(chan struct{})
+	defer close(stop)
+	go controller.Run(stop)
+
+	if !cache.WaitForCacheSync(stop, controller.HasSynced) {
+		t.Fatal("informer cache never synced")
+	}
+
+	created := &unstructured.Unstructured{Object: map[string]interface{}{
+		"apiVersion": "example.com/v1",
+		"kind":       "Widget",
+		"metadata": map[string]interface{}{
+			"name":              "demo",
+			"namespace":         "default",
+			"creationTimestamp": time.Now().Add(time.Minute).UTC().Format(time.RFC3339),
+		},
+	}}
+	if _, err := dynamicClient.Resource(gvr).Namespace("default").Create(context.Background(), created, meta_v1.CreateOptions{}); err != nil {
+		t.Fatalf("creating custom resource: %v", err)
+	}
+
+	events := handler.waitForEvents(t, 1)
+	got := events[0]
+	if got.Reason != "Created" || got.Name != "demo" || got.Namespace != "default" || got.Kind != "widgets" {
+		t.Errorf("unexpected event: %+v", got)
+	}
+	if got.Obj == nil {
+		t.Error("created custom resource was not included in the event")
 	}
 }
