@@ -4,14 +4,16 @@ on:
   pull_request:
     types: [opened, edited, reopened, synchronize]
 
+# The check only reads the PR body from the event payload, so it needs no
+# token scopes and no checkout. Without this block the job gets the repo's
+# default token, which is read-write.
+permissions: {}
+
 jobs:
   check-pr-description:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Check out the code
-      uses: actions/checkout@v2
-
     - name: Validate PR description
       id: validate
       # The body reaches bash through the environment, never through ${{ }}
