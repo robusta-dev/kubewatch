@@ -5,6 +5,7 @@ import (
 
 	"github.com/sirupsen/logrus"
 	apps_v1 "k8s.io/api/apps/v1"
+	autoscaling_v1 "k8s.io/api/autoscaling/v1"
 	batch_v1 "k8s.io/api/batch/v1"
 	api_v1 "k8s.io/api/core/v1"
 	ext_v1beta1 "k8s.io/api/extensions/v1beta1"
@@ -97,6 +98,10 @@ func GetObjectMetaData(obj interface{}) (objectMeta meta_v1.ObjectMeta) {
 	case *apps_v1.ReplicaSet:
 		objectMeta = object.ObjectMeta
 	case *apps_v1.DaemonSet:
+		objectMeta = object.ObjectMeta
+	case *apps_v1.StatefulSet:
+		objectMeta = object.ObjectMeta
+	case *autoscaling_v1.HorizontalPodAutoscaler:
 		objectMeta = object.ObjectMeta
 	case *api_v1.Service:
 		objectMeta = object.ObjectMeta
