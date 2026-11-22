@@ -6,7 +6,8 @@
 # Patching CVE-2026-33818, CVE-2026-39821, CVE-2026-46600, CVE-2026-56853, CVE-2026-56858,
 # CVE-2026-56859, CVE-2026-56860, CVE-2026-56862, CVE-2026-56864, CVE-2026-56865:
 # requires Go >= 1.26.6
-FROM golang:1.26.6 AS builder
+# Go >= 1.26.11 fixes stdlib CVEs, see ROB-1871
+FROM golang:1.26.11 AS builder
 
 RUN apt-get update && \
     dpkg --add-architecture arm64 &&\
